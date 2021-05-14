@@ -1,0 +1,78 @@
+<section id="torch-toolbar">
+  <div class="torch-container">
+    <%= link "New Bus", to: Routes.bus_path(@conn, :new) %>
+  </div>
+</section>
+<section id="torch-index-content">
+  <div class="torch-container">
+    <section id="torch-filters">
+      <h3>Find Buses</h3>
+      <%= form_tag @conn.request_path, method: :get, id: "torch-filters-form" do %>
+        
+          <div class="field">
+            <label>Name</label>
+            <%= filter_select(:bus, :name, @conn.params) %>
+            <%= filter_string_input(:bus, :name, @conn.params) %>
+          </div>
+        
+        
+          <div class="field">
+            <label>Should display</label>
+            <%= filter_boolean_input(:bus, :should_display, @conn.params) %>
+          </div>
+        
+        
+        
+          <div class="field">
+            <label>Display order</label>
+            <%= number_filter_select(:bus, :display_order, @conn.params) %>
+            <%= filter_number_input(:bus, :display_order, @conn.params) %>
+          </div>
+        
+        <button type="submit" class="torch-button">Search</button>
+        <%= link "Clear Filters", to: Routes.bus_path(@conn, :index) %>
+      <% end %>
+
+    </section>
+
+    <section id="torch-table">
+    <%= if length(@buses) > 0 do %>
+      <table>
+        <thead>
+          <tr>
+            
+              <th><%= table_link(@conn, "Name", :name) %></th>
+            
+              <th><%= table_link(@conn, "Display order", :display_order) %></th>
+            
+              <th><%= table_link(@conn, "Should display", :should_display) %></th>
+            
+            <th><span>Actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= for bus <- @buses do %>
+            <tr>
+              
+                <td><%= bus.name %></td>
+              
+                <td><%= bus.display_order %></td>
+              
+                <td><%= bus.should_display %></td>
+              
+              <td class="torch-actions">
+                <span><%= link "Show", to: Routes.bus_path(@conn, :show, bus) %></span>
+                <span><%= link "Edit", to: Routes.bus_path(@conn, :edit, bus) %></span>
+                <span><%= link "Delete", to: Routes.bus_path(@conn, :delete, bus), method: :delete, data: [confirm: "Are you sure?"] %></span>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= render Torch.PaginationView, "_pagination.html", assigns %>
+    <% else %>
+      <p class="torch-no-data">No Buses match your search.</p>
+    <% end %>
+    </section>
+  </div>
+</section>

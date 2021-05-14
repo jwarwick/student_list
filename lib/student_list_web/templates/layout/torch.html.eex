@@ -24,6 +24,7 @@
           </div>
           <nav class="torch-nav">
             <!-- nav links here -->
+            <a href="/buses">Buses</a>
           </nav>
         </div>
       </section>
