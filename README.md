@@ -1,20 +1,15 @@
 # StudentList
 
-To start your Phoenix server:
+Web application to create student directories.
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.setup`
-  * Install Node.js dependencies with `npm install` inside the `assets` directory
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+## Installing
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
+There is a bug with `node_sass`, needed to install `phoenix` from the main repo: `https://github.com/phoenixframework/phoenix/tree/master/installer`.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+`mix ecto.migrate` did not work after running ` mix phx.gen.auth Accounts User users`. The create extension citext was failing because the user did not have `SUPERUSER` permissions.
 
-## Learn more
-
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+To fix, manually connect to the db as a superuser and create the extension:
+```
+% psql -U jwarwick student_list_dev
+student_list_dev=# CREATE EXTENSION citext;
+```
