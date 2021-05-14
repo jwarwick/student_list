@@ -19,4 +19,20 @@ defmodule StudentList.DirectoryFixtures do
 
     bus
   end
+
+  @doc """
+  Generate a class.
+  """
+  def class_fixture(attrs \\ %{}) do
+    {:ok, class} =
+      attrs
+      |> Enum.into(%{
+        display_order: 42,
+        name: "some name",
+        teacher: "some teacher"
+      })
+      |> StudentList.Directory.create_class()
+
+    class
+  end
 end
