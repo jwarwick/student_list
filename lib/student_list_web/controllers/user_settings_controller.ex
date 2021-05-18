@@ -6,6 +6,9 @@ defmodule StudentListWeb.UserSettingsController do
 
   plug :assign_email_and_password_changesets
 
+  plug(:put_root_layout, {StudentListWeb.LayoutView, "torch.html"})
+  plug(:put_layout, false)
+
   def edit(conn, _params) do
     render(conn, "edit.html")
   end

@@ -10,15 +10,16 @@
     <header>
       <section id="torch-account-info">
         <div class="torch-container">
-          <a href="/">user@example.com</a>
-          <a href="/">Logout</a>
+          <%= @current_user.email %>
+          <%= link "Settings", to: Routes.user_settings_path(@conn, :edit) %>
+          <%= link "Logout", to: Routes.user_session_path(@conn, :delete), method: :delete %>
         </div>
       </section>
 
       <section id="torch-nav">
         <div class="torch-container">
           <div class="torch-logo">
-            <a href="/buses">
+            <a href="/admin">
               <h3>Torch</h3>
             </a>
           </div>
