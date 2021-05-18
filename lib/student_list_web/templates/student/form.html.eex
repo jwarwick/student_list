@@ -1,0 +1,32 @@
+<%= form_for @changeset, @action, [multipart: true, id: "torch-form"], fn f -> %>
+  <fieldset class="torch-panel">
+    <legend>
+      <span>Details</span>
+    </legend>
+    <%= if @changeset.action do %>
+      <p class="torch-form-error">Oops, something went wrong! Please check the errors below.</p>
+    <% end %>
+  
+    <div class="torch-form-group">
+      <%= label f, :first_name %>
+      <%= text_input f, :first_name %>
+      <%= error_tag f, :first_name %>
+    </div>
+  
+    <div class="torch-form-group">
+      <%= label f, :last_name %>
+      <%= text_input f, :last_name %>
+      <%= error_tag f, :last_name %>
+    </div>
+  
+    <div class="torch-form-group">
+      <%= label f, :notes %>
+      <%= text_input f, :notes %>
+      <%= error_tag f, :notes %>
+    </div>
+  
+    <div class="torch-submit-form">
+      <%= submit "Submit", class: "torch-submit-button" %>
+    </div>
+  </fieldset>
+<% end %>

@@ -69,6 +69,7 @@ defmodule StudentListWeb.Router do
     resources "/buses", BusController
     resources "/classes", ClassController
     resources "/addresses", AddressController
+    resources "/students", StudentController
   end
 
   scope "/", StudentListWeb do

@@ -476,4 +476,160 @@ defp filter_config(:addresses) do
       
   end
 end
+import Torch.Helpers, only: [sort: 1, paginate: 4]
+import Filtrex.Type.Config
+
+alias StudentList.Directory.Student
+
+@pagination [page_size: 15]
+@pagination_distance 5
+
+@doc """
+Paginate the list of students using filtrex
+filters.
+
+## Examples
+
+    iex> list_students(%{})
+    %{students: [%Student{}], ...}
+"""
+@spec paginate_students(map) :: {:ok, map} | {:error, any}
+def paginate_students(params \\ %{}) do
+  params =
+    params
+    |> Map.put_new("sort_direction", "desc")
+    |> Map.put_new("sort_field", "inserted_at")
+
+  {:ok, sort_direction} = Map.fetch(params, "sort_direction")
+  {:ok, sort_field} = Map.fetch(params, "sort_field")
+
+  with {:ok, filter} <- Filtrex.parse_params(filter_config(:students), params["student"] || %{}),
+       %Scrivener.Page{} = page <- do_paginate_students(filter, params) do
+    {:ok,
+      %{
+        students: page.entries,
+        page_number: page.page_number,
+        page_size: page.page_size,
+        total_pages: page.total_pages,
+        total_entries: page.total_entries,
+        distance: @pagination_distance,
+        sort_field: sort_field,
+        sort_direction: sort_direction
+      }
+    }
+  else
+    {:error, error} -> {:error, error}
+    error -> {:error, error}
+  end
+end
+
+defp do_paginate_students(filter, params) do
+  Student
+  |> Filtrex.query(filter)
+  |> order_by(^sort(params))
+  |> paginate(Repo, params, @pagination)
+end
+
+@doc """
+Returns the list of students.
+
+## Examples
+
+    iex> list_students()
+    [%Student{}, ...]
+
+"""
+def list_students do
+  Repo.all(Student)
+end
+
+@doc """
+Gets a single student.
+
+Raises `Ecto.NoResultsError` if the Student does not exist.
+
+## Examples
+
+    iex> get_student!(123)
+    %Student{}
+
+    iex> get_student!(456)
+    ** (Ecto.NoResultsError)
+
+"""
+def get_student!(id), do: Repo.get!(Student, id)
+
+@doc """
+Creates a student.
+
+## Examples
+
+    iex> create_student(%{field: value})
+    {:ok, %Student{}}
+
+    iex> create_student(%{field: bad_value})
+    {:error, %Ecto.Changeset{}}
+
+"""
+def create_student(attrs \\ %{}) do
+  %Student{}
+  |> Student.changeset(attrs)
+  |> Repo.insert()
+end
+
+@doc """
+Updates a student.
+
+## Examples
+
+    iex> update_student(student, %{field: new_value})
+    {:ok, %Student{}}
+
+    iex> update_student(student, %{field: bad_value})
+    {:error, %Ecto.Changeset{}}
+
+"""
+def update_student(%Student{} = student, attrs) do
+  student
+  |> Student.changeset(attrs)
+  |> Repo.update()
+end
+
+@doc """
+Deletes a Student.
+
+## Examples
+
+    iex> delete_student(student)
+    {:ok, %Student{}}
+
+    iex> delete_student(student)
+    {:error, %Ecto.Changeset{}}
+
+"""
+def delete_student(%Student{} = student) do
+  Repo.delete(student)
+end
+
+@doc """
+Returns an `%Ecto.Changeset{}` for tracking student changes.
+
+## Examples
+
+    iex> change_student(student)
+    %Ecto.Changeset{source: %Student{}}
+
+"""
+def change_student(%Student{} = student, attrs \\ %{}) do
+  Student.changeset(student, attrs)
+end
+
+defp filter_config(:students) do
+  defconfig do
+    text :first_name
+      text :last_name
+      text :notes
+      
+  end
+end
 end

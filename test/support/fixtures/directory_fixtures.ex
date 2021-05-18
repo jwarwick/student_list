@@ -54,4 +54,20 @@ defmodule StudentList.DirectoryFixtures do
 
     address
   end
+
+  @doc """
+  Generate a student.
+  """
+  def student_fixture(attrs \\ %{}) do
+    {:ok, student} =
+      attrs
+      |> Enum.into(%{
+        first_name: "some first_name",
+        last_name: "some last_name",
+        notes: "some notes"
+      })
+      |> StudentList.Directory.create_student()
+
+    student
+  end
 end
