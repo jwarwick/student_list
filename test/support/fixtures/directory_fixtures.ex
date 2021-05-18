@@ -35,4 +35,23 @@ defmodule StudentList.DirectoryFixtures do
 
     class
   end
+
+  @doc """
+  Generate a address.
+  """
+  def address_fixture(attrs \\ %{}) do
+    {:ok, address} =
+      attrs
+      |> Enum.into(%{
+        address1: "some address1",
+        address2: "some address2",
+        city: "some city",
+        phone: "some phone",
+        state: "some state",
+        zip: "some zip"
+      })
+      |> StudentList.Directory.create_address()
+
+    address
+  end
 end

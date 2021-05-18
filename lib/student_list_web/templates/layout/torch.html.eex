@@ -26,6 +26,7 @@
             <!-- nav links here -->
             <a href="/buses">Buses</a>
             <a href="/classes">Classes</a>
+            <a href="/addresses">Addresses</a>
           </nav>
         </div>
       </section>
