@@ -332,4 +332,87 @@ defmodule StudentList.DirectoryTest do
       assert %Ecto.Changeset{} = Directory.change_student(student)
     end
   end
+
+  describe "adults" do
+    alias StudentList.Directory.Adult
+
+    @valid_attrs %{email: "some email", first_name: "some first_name", last_name: "some last_name", mobile_phone: "some mobile_phone"}
+    @update_attrs %{email: "some updated email", first_name: "some updated first_name", last_name: "some updated last_name", mobile_phone: "some updated mobile_phone"}
+    @invalid_attrs %{email: nil, first_name: nil, last_name: nil, mobile_phone: nil}
+
+    def adult_fixture(attrs \\ %{}) do
+      {:ok, adult} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Directory.create_adult()
+
+      adult
+    end
+
+    test "paginate_adults/1 returns paginated list of adults" do
+      for _ <- 1..20 do
+        adult_fixture()
+      end
+
+      {:ok, %{adults: adults} = page} = Directory.paginate_adults(%{})
+
+      assert length(adults) == 15
+      assert page.page_number == 1
+      assert page.page_size == 15
+      assert page.total_pages == 2
+      assert page.total_entries == 20
+      assert page.distance == 5
+      assert page.sort_field == "inserted_at"
+      assert page.sort_direction == "desc"
+    end
+
+    test "list_adults/0 returns all adults" do
+      adult = adult_fixture()
+      assert Directory.list_adults() == [adult]
+    end
+
+    test "get_adult!/1 returns the adult with given id" do
+      adult = adult_fixture()
+      assert Directory.get_adult!(adult.id) == adult
+    end
+
+    test "create_adult/1 with valid data creates a adult" do
+      assert {:ok, %Adult{} = adult} = Directory.create_adult(@valid_attrs)
+      assert adult.email == "some email"
+      assert adult.first_name == "some first_name"
+      assert adult.last_name == "some last_name"
+      assert adult.mobile_phone == "some mobile_phone"
+    end
+
+    test "create_adult/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Directory.create_adult(@invalid_attrs)
+    end
+
+    test "update_adult/2 with valid data updates the adult" do
+      adult = adult_fixture()
+      assert {:ok, adult} = Directory.update_adult(adult, @update_attrs)
+      assert %Adult{} = adult
+      assert adult.email == "some updated email"
+      assert adult.first_name == "some updated first_name"
+      assert adult.last_name == "some updated last_name"
+      assert adult.mobile_phone == "some updated mobile_phone"
+    end
+
+    test "update_adult/2 with invalid data returns error changeset" do
+      adult = adult_fixture()
+      assert {:error, %Ecto.Changeset{}} = Directory.update_adult(adult, @invalid_attrs)
+      assert adult == Directory.get_adult!(adult.id)
+    end
+
+    test "delete_adult/1 deletes the adult" do
+      adult = adult_fixture()
+      assert {:ok, %Adult{}} = Directory.delete_adult(adult)
+      assert_raise Ecto.NoResultsError, fn -> Directory.get_adult!(adult.id) end
+    end
+
+    test "change_adult/1 returns a adult changeset" do
+      adult = adult_fixture()
+      assert %Ecto.Changeset{} = Directory.change_adult(adult)
+    end
+  end
 end

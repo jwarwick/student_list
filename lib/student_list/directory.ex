@@ -632,4 +632,161 @@ defp filter_config(:students) do
       
   end
 end
+import Torch.Helpers, only: [sort: 1, paginate: 4]
+import Filtrex.Type.Config
+
+alias StudentList.Directory.Adult
+
+@pagination [page_size: 15]
+@pagination_distance 5
+
+@doc """
+Paginate the list of adults using filtrex
+filters.
+
+## Examples
+
+    iex> list_adults(%{})
+    %{adults: [%Adult{}], ...}
+"""
+@spec paginate_adults(map) :: {:ok, map} | {:error, any}
+def paginate_adults(params \\ %{}) do
+  params =
+    params
+    |> Map.put_new("sort_direction", "desc")
+    |> Map.put_new("sort_field", "inserted_at")
+
+  {:ok, sort_direction} = Map.fetch(params, "sort_direction")
+  {:ok, sort_field} = Map.fetch(params, "sort_field")
+
+  with {:ok, filter} <- Filtrex.parse_params(filter_config(:adults), params["adult"] || %{}),
+       %Scrivener.Page{} = page <- do_paginate_adults(filter, params) do
+    {:ok,
+      %{
+        adults: page.entries,
+        page_number: page.page_number,
+        page_size: page.page_size,
+        total_pages: page.total_pages,
+        total_entries: page.total_entries,
+        distance: @pagination_distance,
+        sort_field: sort_field,
+        sort_direction: sort_direction
+      }
+    }
+  else
+    {:error, error} -> {:error, error}
+    error -> {:error, error}
+  end
+end
+
+defp do_paginate_adults(filter, params) do
+  Adult
+  |> Filtrex.query(filter)
+  |> order_by(^sort(params))
+  |> paginate(Repo, params, @pagination)
+end
+
+@doc """
+Returns the list of adults.
+
+## Examples
+
+    iex> list_adults()
+    [%Adult{}, ...]
+
+"""
+def list_adults do
+  Repo.all(Adult)
+end
+
+@doc """
+Gets a single adult.
+
+Raises `Ecto.NoResultsError` if the Adult does not exist.
+
+## Examples
+
+    iex> get_adult!(123)
+    %Adult{}
+
+    iex> get_adult!(456)
+    ** (Ecto.NoResultsError)
+
+"""
+def get_adult!(id), do: Repo.get!(Adult, id)
+
+@doc """
+Creates a adult.
+
+## Examples
+
+    iex> create_adult(%{field: value})
+    {:ok, %Adult{}}
+
+    iex> create_adult(%{field: bad_value})
+    {:error, %Ecto.Changeset{}}
+
+"""
+def create_adult(attrs \\ %{}) do
+  %Adult{}
+  |> Adult.changeset(attrs)
+  |> Repo.insert()
+end
+
+@doc """
+Updates a adult.
+
+## Examples
+
+    iex> update_adult(adult, %{field: new_value})
+    {:ok, %Adult{}}
+
+    iex> update_adult(adult, %{field: bad_value})
+    {:error, %Ecto.Changeset{}}
+
+"""
+def update_adult(%Adult{} = adult, attrs) do
+  adult
+  |> Adult.changeset(attrs)
+  |> Repo.update()
+end
+
+@doc """
+Deletes a Adult.
+
+## Examples
+
+    iex> delete_adult(adult)
+    {:ok, %Adult{}}
+
+    iex> delete_adult(adult)
+    {:error, %Ecto.Changeset{}}
+
+"""
+def delete_adult(%Adult{} = adult) do
+  Repo.delete(adult)
+end
+
+@doc """
+Returns an `%Ecto.Changeset{}` for tracking adult changes.
+
+## Examples
+
+    iex> change_adult(adult)
+    %Ecto.Changeset{source: %Adult{}}
+
+"""
+def change_adult(%Adult{} = adult, attrs \\ %{}) do
+  Adult.changeset(adult, attrs)
+end
+
+defp filter_config(:adults) do
+  defconfig do
+    text :first_name
+      text :last_name
+      text :email
+      text :mobile_phone
+      
+  end
+end
 end

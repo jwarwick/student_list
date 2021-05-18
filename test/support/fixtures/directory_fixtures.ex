@@ -70,4 +70,21 @@ defmodule StudentList.DirectoryFixtures do
 
     student
   end
+
+  @doc """
+  Generate a adult.
+  """
+  def adult_fixture(attrs \\ %{}) do
+    {:ok, adult} =
+      attrs
+      |> Enum.into(%{
+        email: "some email",
+        first_name: "some first_name",
+        last_name: "some last_name",
+        mobile_phone: "some mobile_phone"
+      })
+      |> StudentList.Directory.create_adult()
+
+    adult
+  end
 end

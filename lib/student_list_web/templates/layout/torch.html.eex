@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>Admin</title>
+    <title>Admin Dashboard</title>
     <!-- Uncomment to just use the bare bones torch styles rather than the theme -->
     <!--<link rel="stylesheet" href="<%= Routes.static_path(@conn, "/torch/base.css") %>">-->
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/torch/theme.css") %>">
@@ -18,7 +18,7 @@
       <section id="torch-nav">
         <div class="torch-container">
           <div class="torch-logo">
-            <a href="/">
+            <a href="/buses">
               <h3>Torch</h3>
             </a>
           </div>
@@ -28,6 +28,7 @@
             <a href="/classes">Classes</a>
             <a href="/addresses">Addresses</a>
             <a href="/students">Students</a>
+            <a href="/adults">Adults</a>
           </nav>
         </div>
       </section>

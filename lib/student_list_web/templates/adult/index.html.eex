@@ -1,0 +1,89 @@
+<section id="torch-toolbar">
+  <div class="torch-container">
+    <%= link "New Adult", to: Routes.adult_path(@conn, :new) %>
+  </div>
+</section>
+<section id="torch-index-content">
+  <div class="torch-container">
+    <section id="torch-filters">
+      <h3>Find Adults</h3>
+      <%= form_tag @conn.request_path, method: :get, id: "torch-filters-form" do %>
+        
+          <div class="field">
+            <label>First name</label>
+            <%= filter_select(:adult, :first_name, @conn.params) %>
+            <%= filter_string_input(:adult, :first_name, @conn.params) %>
+          </div>
+        
+          <div class="field">
+            <label>Last name</label>
+            <%= filter_select(:adult, :last_name, @conn.params) %>
+            <%= filter_string_input(:adult, :last_name, @conn.params) %>
+          </div>
+        
+          <div class="field">
+            <label>Email</label>
+            <%= filter_select(:adult, :email, @conn.params) %>
+            <%= filter_string_input(:adult, :email, @conn.params) %>
+          </div>
+        
+          <div class="field">
+            <label>Mobile phone</label>
+            <%= filter_select(:adult, :mobile_phone, @conn.params) %>
+            <%= filter_string_input(:adult, :mobile_phone, @conn.params) %>
+          </div>
+        
+        
+        
+        
+        <button type="submit" class="torch-button">Search</button>
+        <%= link "Clear Filters", to: Routes.adult_path(@conn, :index) %>
+      <% end %>
+
+    </section>
+
+    <section id="torch-table">
+    <%= if length(@adults) > 0 do %>
+      <table>
+        <thead>
+          <tr>
+            
+              <th><%= table_link(@conn, "First name", :first_name) %></th>
+            
+              <th><%= table_link(@conn, "Last name", :last_name) %></th>
+            
+              <th><%= table_link(@conn, "Email", :email) %></th>
+            
+              <th><%= table_link(@conn, "Mobile phone", :mobile_phone) %></th>
+            
+            <th><span>Actions</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= for adult <- @adults do %>
+            <tr>
+              
+                <td><%= adult.first_name %></td>
+              
+                <td><%= adult.last_name %></td>
+              
+                <td><%= adult.email %></td>
+              
+                <td><%= adult.mobile_phone %></td>
+              
+              <td class="torch-actions">
+                <span><%= link "Show", to: Routes.adult_path(@conn, :show, adult) %></span>
+                <span><%= link "Edit", to: Routes.adult_path(@conn, :edit, adult) %></span>
+                <span><%= link "Delete", to: Routes.adult_path(@conn, :delete, adult), method: :delete, data: [confirm: "Are you sure?"] %></span>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <%= render Torch.PaginationView, "_pagination.html", assigns %>
+    <% else %>
+      <p class="torch-no-data">No Adults match your search.</p>
+    <% end %>
+    </section>
+  </div>
+</section>
