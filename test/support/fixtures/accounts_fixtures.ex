@@ -28,4 +28,19 @@ defmodule StudentList.AccountsFixtures do
     [_, token, _] = String.split(captured.body, "[TOKEN]")
     token
   end
+
+  @doc """
+  Generate a member.
+  """
+  def member_fixture(attrs \\ %{}) do
+    {:ok, member} =
+      attrs
+      |> Enum.into(%{
+        confirmed_at: ~N[2021-05-18 19:18:00],
+        email: "some email"
+      })
+      |> StudentList.Accounts.create_member()
+
+    member
+  end
 end

@@ -505,4 +505,83 @@ defmodule StudentList.AccountsTest do
       refute inspect(%User{password: "123456"}) =~ "password: \"123456\""
     end
   end
+
+  describe "members" do
+    alias StudentList.Accounts.Member
+
+    @valid_attrs %{confirmed_at: ~N[2021-05-18 19:18:00], email: "some email"}
+    @update_attrs %{confirmed_at: ~N[2021-05-19 19:18:00], email: "some updated email"}
+    @invalid_attrs %{confirmed_at: nil, email: nil}
+
+    def member_fixture(attrs \\ %{}) do
+      {:ok, member} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Accounts.create_member()
+
+      member
+    end
+
+    test "paginate_members/1 returns paginated list of members" do
+      for _ <- 1..20 do
+        member_fixture()
+      end
+
+      {:ok, %{members: members} = page} = Accounts.paginate_members(%{})
+
+      assert length(members) == 15
+      assert page.page_number == 1
+      assert page.page_size == 15
+      assert page.total_pages == 2
+      assert page.total_entries == 20
+      assert page.distance == 5
+      assert page.sort_field == "inserted_at"
+      assert page.sort_direction == "desc"
+    end
+
+    test "list_members/0 returns all members" do
+      member = member_fixture()
+      assert Accounts.list_members() == [member]
+    end
+
+    test "get_member!/1 returns the member with given id" do
+      member = member_fixture()
+      assert Accounts.get_member!(member.id) == member
+    end
+
+    test "create_member/1 with valid data creates a member" do
+      assert {:ok, %Member{} = member} = Accounts.create_member(@valid_attrs)
+      assert member.confirmed_at == ~N[2021-05-18 19:18:00]
+      assert member.email == "some email"
+    end
+
+    test "create_member/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Accounts.create_member(@invalid_attrs)
+    end
+
+    test "update_member/2 with valid data updates the member" do
+      member = member_fixture()
+      assert {:ok, member} = Accounts.update_member(member, @update_attrs)
+      assert %Member{} = member
+      assert member.confirmed_at == ~N[2021-05-19 19:18:00]
+      assert member.email == "some updated email"
+    end
+
+    test "update_member/2 with invalid data returns error changeset" do
+      member = member_fixture()
+      assert {:error, %Ecto.Changeset{}} = Accounts.update_member(member, @invalid_attrs)
+      assert member == Accounts.get_member!(member.id)
+    end
+
+    test "delete_member/1 deletes the member" do
+      member = member_fixture()
+      assert {:ok, %Member{}} = Accounts.delete_member(member)
+      assert_raise Ecto.NoResultsError, fn -> Accounts.get_member!(member.id) end
+    end
+
+    test "change_member/1 returns a member changeset" do
+      member = member_fixture()
+      assert %Ecto.Changeset{} = Accounts.change_member(member)
+    end
+  end
 end

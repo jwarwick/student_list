@@ -30,6 +30,7 @@
             <a href="/addresses">Addresses</a>
             <a href="/students">Students</a>
             <a href="/adults">Adults</a>
+            <a href="/members">Users</a>
           </nav>
         </div>
       </section>

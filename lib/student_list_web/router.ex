@@ -67,6 +67,7 @@ defmodule StudentListWeb.Router do
     get "/users/settings/confirm_email/:token", UserSettingsController, :confirm_email
 
     get "/admin", BusController, :index
+    resources "/members", MemberController
     resources "/buses", BusController
     resources "/classes", ClassController
     resources "/addresses", AddressController

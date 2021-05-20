@@ -347,4 +347,153 @@ defmodule StudentList.Accounts do
       {:error, :user, changeset, _} -> {:error, changeset}
     end
   end
+
+  import Torch.Helpers, only: [sort: 1, paginate: 4]
+  import Filtrex.Type.Config
+
+  @pagination [page_size: 15]
+  @pagination_distance 5
+
+  @doc """
+  Paginate the list of members using filtrex
+  filters.
+
+  ## Examples
+
+      iex> list_members(%{})
+      %{members: [%Member{}], ...}
+  """
+  @spec paginate_members(map) :: {:ok, map} | {:error, any}
+  def paginate_members(params \\ %{}) do
+    params =
+      params
+      |> Map.put_new("sort_direction", "desc")
+      |> Map.put_new("sort_field", "inserted_at")
+
+    {:ok, sort_direction} = Map.fetch(params, "sort_direction")
+    {:ok, sort_field} = Map.fetch(params, "sort_field")
+
+    with {:ok, filter} <- Filtrex.parse_params(filter_config(:members), params["member"] || %{}),
+         %Scrivener.Page{} = page <- do_paginate_members(filter, params) do
+      {:ok,
+        %{
+          members: page.entries,
+          page_number: page.page_number,
+          page_size: page.page_size,
+          total_pages: page.total_pages,
+          total_entries: page.total_entries,
+          distance: @pagination_distance,
+          sort_field: sort_field,
+          sort_direction: sort_direction
+        }
+      }
+    else
+      {:error, error} -> {:error, error}
+      error -> {:error, error}
+    end
+  end
+
+  defp do_paginate_members(filter, params) do
+    User
+    |> Filtrex.query(filter)
+    |> order_by(^sort(params))
+    |> paginate(Repo, params, @pagination)
+  end
+
+  @doc """
+  Returns the list of members.
+
+  ## Examples
+
+      iex> list_members()
+      [%Member{}, ...]
+
+  """
+  def list_members do
+    Repo.all(User)
+  end
+
+  @doc """
+  Gets a single member.
+
+  Raises `Ecto.NoResultsError` if the Member does not exist.
+
+  ## Examples
+
+      iex> get_member!(123)
+      %Member{}
+
+      iex> get_member!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_member!(id), do: get_user!(id)
+
+  @doc """
+  Creates a member.
+
+  ## Examples
+
+      iex> create_member(%{field: value})
+      {:ok, %Member{}}
+
+      iex> create_member(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_member(attrs \\ %{}) do
+    raise "TODO"
+  end
+
+  @doc """
+  Updates a member.
+
+  ## Examples
+
+      iex> update_member(member, %{field: new_value})
+      {:ok, %Member{}}
+
+      iex> update_member(member, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_member(%User{} = member, attrs) do
+    raise "TODO"
+  end
+
+  @doc """
+  Deletes a Member.
+
+  ## Examples
+
+      iex> delete_member(member)
+      {:ok, %Member{}}
+
+      iex> delete_member(member)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_member(%User{} = member) do
+    raise "TODO"
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking member changes.
+
+  ## Examples
+
+      iex> change_member(member)
+      %Ecto.Changeset{source: %Member{}}
+
+  """
+  def change_member(%User{} = member, _attrs \\ %{}) do
+    raise "TODO"
+  end
+
+  defp filter_config(:members) do
+    defconfig do
+      text :email
+      datetime :confirmed_at
+    end
+  end
 end
