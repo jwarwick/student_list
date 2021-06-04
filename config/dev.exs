@@ -63,6 +63,7 @@ config :student_list, StudentListWeb.Endpoint,
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
       ~r"lib/student_list_web/(live|views)/.*(ex)$",
+      ~r"lib/student_list_web/live/.*(sface)$",
       ~r"lib/student_list_web/templates/.*(eex)$"
     ]
   ]
