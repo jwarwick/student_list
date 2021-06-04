@@ -3,6 +3,8 @@ defmodule StudentListWeb.AdultControllerTest do
 
   alias StudentList.Directory
 
+  setup :register_and_log_in_user
+
   @create_attrs %{email: "some email", first_name: "some first_name", last_name: "some last_name", mobile_phone: "some mobile_phone"}
   @update_attrs %{email: "some updated email", first_name: "some updated first_name", last_name: "some updated last_name", mobile_phone: "some updated mobile_phone"}
   @invalid_attrs %{email: nil, first_name: nil, last_name: nil, mobile_phone: nil}
@@ -10,6 +12,12 @@ defmodule StudentListWeb.AdultControllerTest do
   def fixture(:adult) do
     {:ok, adult} = Directory.create_adult(@create_attrs)
     adult
+  end
+
+  test "redirects if user is not logged in" do
+    conn = build_conn()
+    conn = get(conn, Routes.adult_path(conn, :index))
+    assert redirected_to(conn) == Routes.user_session_path(conn, :new)
   end
 
   describe "index" do

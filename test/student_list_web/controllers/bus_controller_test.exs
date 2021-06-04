@@ -3,6 +3,8 @@ defmodule StudentListWeb.BusControllerTest do
 
   alias StudentList.Directory
 
+  setup :register_and_log_in_user
+
   @create_attrs %{display_order: 42, name: "some name", should_display: true}
   @update_attrs %{display_order: 43, name: "some updated name", should_display: false}
   @invalid_attrs %{display_order: nil, name: nil, should_display: nil}
@@ -10,6 +12,12 @@ defmodule StudentListWeb.BusControllerTest do
   def fixture(:bus) do
     {:ok, bus} = Directory.create_bus(@create_attrs)
     bus
+  end
+
+  test "redirects if user is not logged in" do
+    conn = build_conn()
+    conn = get(conn, Routes.bus_path(conn, :index))
+    assert redirected_to(conn) == Routes.user_session_path(conn, :new)
   end
 
   describe "index" do

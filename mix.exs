@@ -48,7 +48,8 @@ defmodule StudentList.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:torch, "~> 3.6"}
+      {:torch, "~> 3.6"},
+      {:sobelow, "~> 0.8", only: :dev}
     ]
   end
 

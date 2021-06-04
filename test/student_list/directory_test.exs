@@ -218,8 +218,14 @@ defmodule StudentList.DirectoryTest do
       assert address.zip == "some zip"
     end
 
-    test "create_address/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Directory.create_address(@invalid_attrs)
+    test "create_address/1 with empty data creates an address" do
+      assert {:ok, %Address{} = address} = Directory.create_address(@invalid_attrs)
+      assert address.address1 == nil
+      assert address.address2 == nil
+      assert address.city == nil
+      assert address.phone == nil
+      assert address.state == nil
+      assert address.zip == nil
     end
 
     test "update_address/2 with valid data updates the address" do
@@ -234,10 +240,15 @@ defmodule StudentList.DirectoryTest do
       assert address.zip == "some updated zip"
     end
 
-    test "update_address/2 with invalid data returns error changeset" do
+    test "update_address/2 with empty data updates address" do
       address = address_fixture()
-      assert {:error, %Ecto.Changeset{}} = Directory.update_address(address, @invalid_attrs)
-      assert address == Directory.get_address!(address.id)
+      assert {:ok, %Address{} = address} = Directory.update_address(address, @invalid_attrs)
+      assert address.address1 == nil
+      assert address.address2 == nil
+      assert address.city == nil
+      assert address.phone == nil
+      assert address.state == nil
+      assert address.zip == nil
     end
 
     test "delete_address/1 deletes the address" do

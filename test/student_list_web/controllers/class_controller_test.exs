@@ -3,6 +3,8 @@ defmodule StudentListWeb.ClassControllerTest do
 
   alias StudentList.Directory
 
+  setup :register_and_log_in_user
+
   @create_attrs %{display_order: 42, name: "some name", teacher: "some teacher"}
   @update_attrs %{display_order: 43, name: "some updated name", teacher: "some updated teacher"}
   @invalid_attrs %{display_order: nil, name: nil, teacher: nil}
@@ -10,6 +12,12 @@ defmodule StudentListWeb.ClassControllerTest do
   def fixture(:class) do
     {:ok, class} = Directory.create_class(@create_attrs)
     class
+  end
+
+  test "redirects if user is not logged in" do
+    conn = build_conn()
+    conn = get(conn, Routes.class_path(conn, :index))
+    assert redirected_to(conn) == Routes.user_session_path(conn, :new)
   end
 
   describe "index" do

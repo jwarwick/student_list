@@ -25,7 +25,7 @@ defmodule StudentListWeb.MemberController do
     render(conn, "new.html", changeset: changeset)
   end
 
-  def create(conn, %{"member" => member_params}) do
+  def create(conn, %{"user" => member_params}) do
     case Accounts.create_member(member_params) do
       {:ok, member} ->
         conn
@@ -47,7 +47,7 @@ defmodule StudentListWeb.MemberController do
     render(conn, "edit.html", member: member, changeset: changeset)
   end
 
-  def update(conn, %{"id" => id, "member" => member_params}) do
+  def update(conn, %{"id" => id, "user" => member_params}) do
     member = Accounts.get_member!(id)
 
     case Accounts.update_member(member, member_params) do

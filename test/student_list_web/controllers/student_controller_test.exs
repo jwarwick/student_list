@@ -3,6 +3,8 @@ defmodule StudentListWeb.StudentControllerTest do
 
   alias StudentList.Directory
 
+  setup :register_and_log_in_user
+
   @create_attrs %{first_name: "some first_name", last_name: "some last_name", notes: "some notes"}
   @update_attrs %{first_name: "some updated first_name", last_name: "some updated last_name", notes: "some updated notes"}
   @invalid_attrs %{first_name: nil, last_name: nil, notes: nil}
@@ -10,6 +12,12 @@ defmodule StudentListWeb.StudentControllerTest do
   def fixture(:student) do
     {:ok, student} = Directory.create_student(@create_attrs)
     student
+  end
+
+  test "redirects if user is not logged in" do
+    conn = build_conn()
+    conn = get(conn, Routes.student_path(conn, :index))
+    assert redirected_to(conn) == Routes.user_session_path(conn, :new)
   end
 
   describe "index" do

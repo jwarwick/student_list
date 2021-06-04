@@ -3,6 +3,8 @@ defmodule StudentListWeb.AddressControllerTest do
 
   alias StudentList.Directory
 
+  setup :register_and_log_in_user
+
   @create_attrs %{address1: "some address1", address2: "some address2", city: "some city", phone: "some phone", state: "some state", zip: "some zip"}
   @update_attrs %{address1: "some updated address1", address2: "some updated address2", city: "some updated city", phone: "some updated phone", state: "some updated state", zip: "some updated zip"}
   @invalid_attrs %{address1: nil, address2: nil, city: nil, phone: nil, state: nil, zip: nil}
@@ -10,6 +12,12 @@ defmodule StudentListWeb.AddressControllerTest do
   def fixture(:address) do
     {:ok, address} = Directory.create_address(@create_attrs)
     address
+  end
+
+  test "redirects if user is not logged in" do
+    conn = build_conn()
+    conn = get(conn, Routes.address_path(conn, :index))
+    assert redirected_to(conn) == Routes.user_session_path(conn, :new)
   end
 
   describe "index" do
@@ -37,9 +45,13 @@ defmodule StudentListWeb.AddressControllerTest do
       assert html_response(conn, 200) =~ "Address Details"
     end
 
-    test "renders errors when data is invalid", %{conn: conn} do
+    test "redirects when data is empty", %{conn: conn} do
       conn = post conn, Routes.address_path(conn, :create), address: @invalid_attrs
-      assert html_response(conn, 200) =~ "New Address"
+      assert %{id: id} = redirected_params(conn)
+      assert redirected_to(conn) == Routes.address_path(conn, :show, id)
+
+      conn = get conn, Routes.address_path(conn, :show, id)
+      assert html_response(conn, 200) =~ "Address Details"
     end
   end
 
@@ -63,9 +75,9 @@ defmodule StudentListWeb.AddressControllerTest do
       assert html_response(conn, 200) =~ "some updated address1"
     end
 
-    test "renders errors when data is invalid", %{conn: conn, address: address} do
+    test "redirects when data is invalid", %{conn: conn, address: address} do
       conn = put conn, Routes.address_path(conn, :update, address), address: @invalid_attrs
-      assert html_response(conn, 200) =~ "Edit Address"
+      assert redirected_to(conn) == Routes.address_path(conn, :show, address)
     end
   end
 

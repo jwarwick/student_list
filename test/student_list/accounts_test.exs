@@ -507,20 +507,11 @@ defmodule StudentList.AccountsTest do
   end
 
   describe "members" do
-    alias StudentList.Accounts.Member
+    alias StudentList.Accounts.User
 
-    @valid_attrs %{confirmed_at: ~N[2021-05-18 19:18:00], email: "some email"}
-    @update_attrs %{confirmed_at: ~N[2021-05-19 19:18:00], email: "some updated email"}
-    @invalid_attrs %{confirmed_at: nil, email: nil}
-
-    def member_fixture(attrs \\ %{}) do
-      {:ok, member} =
-        attrs
-        |> Enum.into(@valid_attrs)
-        |> Accounts.create_member()
-
-      member
-    end
+    @valid_attrs %{email: "email@example.com", password: "Sup3rSekur!4567"}
+    @update_attrs %{email: "updated@example.com", password: "Mor3Secured!!12343r4"}
+    @invalid_attrs %{email: nil}
 
     test "paginate_members/1 returns paginated list of members" do
       for _ <- 1..20 do
@@ -550,9 +541,8 @@ defmodule StudentList.AccountsTest do
     end
 
     test "create_member/1 with valid data creates a member" do
-      assert {:ok, %Member{} = member} = Accounts.create_member(@valid_attrs)
-      assert member.confirmed_at == ~N[2021-05-18 19:18:00]
-      assert member.email == "some email"
+      assert {:ok, %User{} = member} = Accounts.create_member(@valid_attrs)
+      assert member.email == "email@example.com"
     end
 
     test "create_member/1 with invalid data returns error changeset" do
@@ -562,9 +552,8 @@ defmodule StudentList.AccountsTest do
     test "update_member/2 with valid data updates the member" do
       member = member_fixture()
       assert {:ok, member} = Accounts.update_member(member, @update_attrs)
-      assert %Member{} = member
-      assert member.confirmed_at == ~N[2021-05-19 19:18:00]
-      assert member.email == "some updated email"
+      assert %User{} = member
+      assert member.email == "updated@example.com"
     end
 
     test "update_member/2 with invalid data returns error changeset" do
@@ -575,7 +564,7 @@ defmodule StudentList.AccountsTest do
 
     test "delete_member/1 deletes the member" do
       member = member_fixture()
-      assert {:ok, %Member{}} = Accounts.delete_member(member)
+      assert {:ok, %User{}} = Accounts.delete_member(member)
       assert_raise Ecto.NoResultsError, fn -> Accounts.get_member!(member.id) end
     end
 

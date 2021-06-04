@@ -442,7 +442,9 @@ defmodule StudentList.Accounts do
 
   """
   def create_member(attrs \\ %{}) do
-    raise "TODO"
+    %User{}
+    |> User.registration_changeset(attrs)
+    |> Repo.insert()
   end
 
   @doc """
@@ -458,7 +460,9 @@ defmodule StudentList.Accounts do
 
   """
   def update_member(%User{} = member, attrs) do
-    raise "TODO"
+    member
+    |> change_user_registration(attrs)
+    |> Repo.update()
   end
 
   @doc """
@@ -474,7 +478,7 @@ defmodule StudentList.Accounts do
 
   """
   def delete_member(%User{} = member) do
-    raise "TODO"
+    Repo.delete(member)
   end
 
   @doc """
@@ -486,8 +490,9 @@ defmodule StudentList.Accounts do
       %Ecto.Changeset{source: %Member{}}
 
   """
-  def change_member(%User{} = member, _attrs \\ %{}) do
-    raise "TODO"
+  def change_member(%User{} = member, attrs \\ %{}) do
+    member
+    |> change_user_registration(attrs)
   end
 
   defp filter_config(:members) do
