@@ -60,6 +60,7 @@ defmodule StudentListWeb.Router do
   end
 
   scope "/", StudentListWeb do
+    # XXX - should put :put_layout false calls here to get the torch layout instead of the root_layout
     pipe_through [:browser, :require_authenticated_user]
 
     get "/users/settings", UserSettingsController, :edit

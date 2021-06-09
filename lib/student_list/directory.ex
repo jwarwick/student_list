@@ -13,6 +13,16 @@ alias StudentList.Directory.Bus
 @pagination [page_size: 15]
 @pagination_distance 5
 
+ 
+  @doc """
+  Get a keyword list of buses sorted by `display_order`.
+  """
+  def sorted_buses do
+    query = from b in Bus, order_by: b.display_order, select: {b.name, b.id}
+    Repo.all(query)
+    |> Keyword.new(fn {a, b} -> {String.to_atom(a), b} end)
+  end
+
 @doc """
 Paginate the list of buses using filtrex
 filters.
