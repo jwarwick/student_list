@@ -9,6 +9,7 @@ import Torch.Helpers, only: [sort: 1, paginate: 4]
 import Filtrex.Type.Config
 
 alias StudentList.Directory.Bus
+alias StudentList.Directory.Class
 
 @pagination [page_size: 15]
 @pagination_distance 5
@@ -19,6 +20,15 @@ alias StudentList.Directory.Bus
   """
   def sorted_buses do
     query = from b in Bus, order_by: b.display_order, select: {b.name, b.id}
+    Repo.all(query)
+    |> Keyword.new(fn {a, b} -> {String.to_atom(a), b} end)
+  end
+
+  @doc """
+  Get a keyword list of classes sorted by `display_order`.
+  """
+  def sorted_classes do
+    query = from c in Class, order_by: c.display_order, select: {c.name, c.id}
     Repo.all(query)
     |> Keyword.new(fn {a, b} -> {String.to_atom(a), b} end)
   end
@@ -174,7 +184,6 @@ end
 import Torch.Helpers, only: [sort: 1, paginate: 4]
 import Filtrex.Type.Config
 
-alias StudentList.Directory.Class
 
 @pagination [page_size: 15]
 @pagination_distance 5
