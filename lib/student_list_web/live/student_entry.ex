@@ -4,7 +4,8 @@ defmodule StudentListWeb.Live.StudentEntry do
   alias StudentListWeb.Live.{ClassEntry, BusEntry}
   alias Surface.Components.Form.{Field, Label, TextInput}
 
-  data user, :string, default: "a trivia question"
+  data first_name, :string, default: ""
+  data last_name, :string, default: ""
 
   def render(assigns) do
     ~H"""
@@ -12,14 +13,14 @@ defmodule StudentListWeb.Live.StudentEntry do
       <Field name="first_name">
         <Label>First Name</Label>
         <div class="control">
-          <TextInput />
+          <TextInput value={{@first_name}}/>
         </div>
       </Field>
 
       <Field name="last_name">
         <Label>Last Name</Label>
         <div class="control">
-          <TextInput />
+          <TextInput value={{@last_name}}/>
         </div>
       </Field>
 
