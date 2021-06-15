@@ -23,6 +23,16 @@
         </li>
       
         <li>
+          <div class="torch-show-label">Classroom:</div>
+          <div class="torch-show-data"><%= if @student.class, do: @student.class.name, else: "Not Set" %></div>
+        </li>
+
+        <li>
+          <div class="torch-show-label">Bus:</div>
+          <div class="torch-show-data"><%= if @student.bus, do: @student.bus.name, else: "Not Set" %></div>
+        </li>
+
+        <li>
           <div class="torch-show-label">Notes:</div>
           <div class="torch-show-data"><%= @student.notes %></div>
         </li>

@@ -13,6 +13,12 @@ defmodule StudentList.Directory.Student do
     timestamps()
   end
 
+  def creation_changeset(student \\ %StudentList.Directory.Student{}, attrs) do
+    student
+    |> cast(attrs, [:first_name, :last_name])
+    |> validate_required([:first_name, :last_name])
+  end
+
   @doc false
   def changeset(student, attrs \\ %{}) do
     student

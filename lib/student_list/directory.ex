@@ -546,6 +546,7 @@ defp do_paginate_students(filter, params) do
   Student
   |> Filtrex.query(filter)
   |> order_by(^sort(params))
+  |> preload([:bus, :class])
   |> paginate(Repo, params, @pagination)
 end
 
@@ -559,7 +560,7 @@ Returns the list of students.
 
 """
 def list_students do
-  Repo.all(Student)
+  Repo.all(Student) |> Repo.preload([:bus, :class])
 end
 
 @doc """
@@ -576,7 +577,7 @@ Raises `Ecto.NoResultsError` if the Student does not exist.
     ** (Ecto.NoResultsError)
 
 """
-def get_student!(id), do: Repo.get!(Student, id)
+def get_student!(id), do: Repo.get!(Student, id) |> Repo.preload([:bus, :class])
 
 @doc """
 Creates a student.

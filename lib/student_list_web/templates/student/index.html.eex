@@ -45,6 +45,10 @@
               <th><%= table_link(@conn, "First name", :first_name) %></th>
             
               <th><%= table_link(@conn, "Last name", :last_name) %></th>
+
+              <th><%= table_link(@conn, "Classroom", :class_id) %></th>
+
+              <th><%= table_link(@conn, "Bus", :bus_id) %></th>
             
               <th><%= table_link(@conn, "Notes", :notes) %></th>
             
@@ -58,6 +62,10 @@
                 <td><%= student.first_name %></td>
               
                 <td><%= student.last_name %></td>
+
+                <td><%= if student.class, do: student.class.name, else: "Not Set" %></td>
+
+                <td><%= if student.bus, do: student.bus.name, else: "Not Set" %></td>
               
                 <td><%= student.notes %></td>
               

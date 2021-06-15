@@ -1,12 +1,13 @@
 defmodule StudentListWeb.PageLive do
   use Surface.LiveView
 
+  alias StudentList.Repo
+  alias Ecto.Multi
+
   alias StudentList.Directory
+  alias StudentList.Directory.Student
 
   alias StudentListWeb.Live.{Heading, StudentEntry}
-
-  # alias Surface.Components.Form
-  # alias Surface.Components.Form.{Field, Label, TextInput, Select}
 
   data submitted, :boolean, default: false
   data students, :list, default: [%{}]
@@ -62,7 +63,12 @@ defmodule StudentListWeb.PageLive do
 
   @impl true
   def handle_event("submit_form", _value, socket) do
-    IO.inspect(socket.assigns)
+    multi = Enum.reduce(Enum.with_index(socket.assigns.students),
+                                        Multi.new(),
+                                        fn ({x, idx}, acc) -> Multi.insert(acc, "student #{idx}", Student.creation_changeset(x)) end)
+    result = Repo.transaction(multi)
+    IO.inspect(result)
+
     socket = assign(socket, submitted: true)
     {:noreply, socket}
   end
