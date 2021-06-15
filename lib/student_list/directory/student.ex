@@ -2,6 +2,7 @@ defmodule StudentList.Directory.Student do
   use Ecto.Schema
   import Ecto.Changeset
   alias StudentList.Directory.{Bus, Class}
+  alias StudentList.Repo
 
   schema "students" do
     field :first_name, :string
@@ -13,10 +14,23 @@ defmodule StudentList.Directory.Student do
     timestamps()
   end
 
+  defp get_item(type, string_id) do
+    case Integer.parse(string_id) do
+      {x, _} -> Repo.get(type, x)
+      _ -> nil
+    end
+  end
+
   def creation_changeset(student \\ %StudentList.Directory.Student{}, attrs) do
+    bus = get_item(Bus, attrs["bus"])
+    class = get_item(Class, attrs["classroom"])
+
     student
+    |> Repo.preload([:bus, :class])
     |> cast(attrs, [:first_name, :last_name])
-    |> validate_required([:first_name, :last_name])
+    |> put_assoc(:bus, bus)
+    |> put_assoc(:class, class)
+    |> validate_required([:first_name])
   end
 
   @doc false

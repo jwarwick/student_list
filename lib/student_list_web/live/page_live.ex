@@ -66,8 +66,7 @@ defmodule StudentListWeb.PageLive do
     multi = Enum.reduce(Enum.with_index(socket.assigns.students),
                                         Multi.new(),
                                         fn ({x, idx}, acc) -> Multi.insert(acc, "student #{idx}", Student.creation_changeset(x)) end)
-    result = Repo.transaction(multi)
-    IO.inspect(result)
+    _result = Repo.transaction(multi)
 
     socket = assign(socket, submitted: true)
     {:noreply, socket}
