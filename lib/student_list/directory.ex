@@ -27,7 +27,7 @@ alias StudentList.Directory.Class
   @doc """
   Get a keyword list of classes sorted by `display_order`.
   """
-  def sorted_classes do
+  def sorted_classrooms do
     query = from c in Class, order_by: c.display_order, select: {c.name, c.id}
     Repo.all(query)
     |> Keyword.new(fn {a, b} -> {String.to_atom(a), b} end)
