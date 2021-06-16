@@ -8,7 +8,7 @@ defmodule StudentListWeb.PageLiveTest do
     disconnected_html = html_response(conn, 200)
     {:ok, _live, connected_html} = live(conn)
 
-    assert disconnected_html =~ "Welcome to Phoenix!"
-    assert connected_html =~ "Welcome to Phoenix!"
+    assert disconnected_html =~ "Submit"
+    assert connected_html =~ "Submit"
   end
 end
