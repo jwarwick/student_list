@@ -1,6 +1,7 @@
 defmodule StudentList.Directory.Student do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Ecto.Multi
   alias StudentList.Directory.{Bus, Class}
   alias StudentList.Repo
 
@@ -21,16 +22,18 @@ defmodule StudentList.Directory.Student do
     end
   end
 
-  def creation_changeset(student \\ %StudentList.Directory.Student{}, attrs) do
+  def creation_transaction(multi, idx, attrs) do
     bus = get_item(Bus, attrs["bus"])
     class = get_item(Class, attrs["classroom"])
 
-    student
-    |> Repo.preload([:bus, :class])
-    |> cast(attrs, [:first_name, :last_name])
-    |> put_assoc(:bus, bus)
-    |> put_assoc(:class, class)
-    |> validate_required([:first_name])
+    Multi.insert(multi, 
+                 "student #{idx}",
+                 %StudentList.Directory.Student{}
+                 |> Repo.preload([:bus, :class])
+                 |> cast(attrs, [:first_name, :last_name])
+                 |> put_assoc(:bus, bus)
+                 |> put_assoc(:class, class)
+                 |> validate_required([:first_name]))
   end
 
   @doc false

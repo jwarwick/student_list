@@ -32,6 +32,12 @@
           <div class="torch-show-data"><%= @adult.mobile_phone %></div>
         </li>
       
+        <li>
+          <div class="torch-show-label">Address:</div>
+          <%= if @adult.address do %>
+            <div class="torch-show-data"><%= link @adult.address.address1, to: Routes.address_path(@conn, :show, @adult.address) %></div>
+          <% end %>
+        </li>
     </ul>
   </div>
 </section>

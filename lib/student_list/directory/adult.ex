@@ -13,6 +13,11 @@ defmodule StudentList.Directory.Adult do
     timestamps()
   end
 
+  def creation_changeset(adult \\ %StudentList.Directory.Adult{}, attrs) do
+    adult
+    |> cast(attrs, [:first_name, :last_name, :email, :mobile_phone])
+  end
+
   @doc false
   def changeset(adult, attrs) do
     adult

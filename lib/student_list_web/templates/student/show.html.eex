@@ -24,12 +24,16 @@
       
         <li>
           <div class="torch-show-label">Classroom:</div>
-          <div class="torch-show-data"><%= if @student.class, do: @student.class.name, else: "Not Set" %></div>
+          <%= if @student.class do %>
+            <div class="torch-show-data"><%= link @student.class.name, to: Routes.class_path(@conn, :show, @student.class) %></div>
+          <% end %>
         </li>
 
         <li>
           <div class="torch-show-label">Bus:</div>
-          <div class="torch-show-data"><%= if @student.bus, do: @student.bus.name, else: "Not Set" %></div>
+          <%= if @student.bus do %>
+            <div class="torch-show-data"><%= link @student.bus.name, to: Routes.bus_path(@conn, :show, @student.bus) %></div>
+          <% end %>
         </li>
 
         <li>

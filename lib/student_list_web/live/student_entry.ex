@@ -15,40 +15,40 @@ defmodule StudentListWeb.Live.StudentEntry do
 
   @impl true
   def render(assigns) do
-    ~H"""
+    ~F"""
       <div>
-      <Form for={{:student}} change="update_student" >
+      <Form for={:student} change="update_student" >
         <Field name="first_name">
           <Label>First Name</Label>
           <div class="control">
-            <TextInput value={{ Map.get(@student, "first_name", "") }} id="{{assigns.id}}-first-name" />
+            <TextInput value={Map.get(@student, "first_name", "")} id={"#{assigns.id}-first-name"} />
           </div>
         </Field>
 
         <Field name="last_name">
           <Label>Last Name</Label>
           <div class="control">
-            <TextInput value={{ Map.get(@student, "last_name", "") }} id="{{assigns.id}}-last-name" />
+            <TextInput value={Map.get(@student, "last_name", "")} id={"#{assigns.id}-last-name"} />
           </div>
         </Field>
 
-        <Field name={{:classroom}}>
+        <Field name={:classroom}>
           <Label>Classroom</Label>
           <div class="select">
-            <Select options={{ @sorted_classrooms }} id="{{assigns.id}}-classroom" selected={{ Map.get(@student, "classroom", first_value(@sorted_classrooms)) }}/>
+            <Select options={@sorted_classrooms} id={"#{assigns.id}-classroom"} selected={Map.get(@student, "classroom", first_value(@sorted_classrooms))}/>
           </div>
         </Field>
 
-        <Field name={{:bus}}>
+        <Field name={:bus}>
           <Label>Bus</Label>
           <div class="select">
-            <Select options={{ @sorted_buses }} id="{{assigns.id}}-bus" selected={{ Map.get(@student, "bus", first_value(@sorted_buses)) }}/>
+            <Select options={@sorted_buses} id={"#{assigns.id}-bus"} selected={Map.get(@student, "bus", first_value(@sorted_buses))}/>
           </div>
         </Field>
 
         </Form>
 
-        <Link :if={{@can_delete}} label="Remove Student" to="#" click="delete_student" />
+        <Link :if={@can_delete} label="Remove Student" to="#" click="delete_student" />
       </div>
     """
   end

@@ -1,6 +1,7 @@
 defmodule StudentList.Directory.Address do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Ecto.Multi
   alias StudentList.Directory.Adult
 
   schema "addresses" do
@@ -15,10 +16,13 @@ defmodule StudentList.Directory.Address do
     timestamps()
   end
 
-  def creation_changeset(address \\ %StudentList.Directory.Address{}, attrs) do
-    IO.inspect(attrs, label: "address creation")
-    address
-    |> cast(attrs, [:address1, :address2, :city, :state, :zip, :phone])
+  def creation_transaction(multi, address_index, attrs) do
+    Multi.insert(multi, 
+                 "address #{address_index}",
+                 %StudentList.Directory.Address{}
+                 |> cast(attrs, [:address1, :address2, :city, :state, :zip, :phone])
+                 |> cast_assoc(:adults, with: &Adult.creation_changeset/2)
+    )
   end
 
   @doc false

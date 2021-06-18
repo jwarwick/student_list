@@ -417,7 +417,7 @@ Raises `Ecto.NoResultsError` if the Address does not exist.
     ** (Ecto.NoResultsError)
 
 """
-def get_address!(id), do: Repo.get!(Address, id)
+def get_address!(id), do: Repo.get!(Address, id) |> Repo.preload([:adults])
 
 @doc """
 Creates a address.
@@ -703,6 +703,7 @@ defp do_paginate_adults(filter, params) do
   Adult
   |> Filtrex.query(filter)
   |> order_by(^sort(params))
+  |> preload([:address])
   |> paginate(Repo, params, @pagination)
 end
 
@@ -733,7 +734,7 @@ Raises `Ecto.NoResultsError` if the Adult does not exist.
     ** (Ecto.NoResultsError)
 
 """
-def get_adult!(id), do: Repo.get!(Adult, id)
+def get_adult!(id), do: Repo.get!(Adult, id) |> Repo.preload([:address])
 
 @doc """
 Creates a adult.

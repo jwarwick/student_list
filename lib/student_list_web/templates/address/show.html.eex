@@ -42,6 +42,12 @@
           <div class="torch-show-data"><%= @address.phone %></div>
         </li>
       
+        <%= for adult <- @address.adults do %>
+          <li>
+            <div class="torch-show-label">Adult:</div>
+            <span class="torch-show-data"><%= link adult.first_name, to: Routes.adult_path(@conn, :show, adult) %></span>
+          </li>
+        <% end %>
     </ul>
   </div>
 </section>
