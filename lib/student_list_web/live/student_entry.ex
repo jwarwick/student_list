@@ -17,7 +17,7 @@ defmodule StudentListWeb.Live.StudentEntry do
   def render(assigns) do
     ~H"""
       <div>
-      <Form for={{:student}} change="change_student" >
+      <Form for={{:student}} change="update_student" >
         <Field name="first_name">
           <Label>First Name</Label>
           <div class="control">
@@ -54,7 +54,7 @@ defmodule StudentListWeb.Live.StudentEntry do
   end
 
   @impl true
-  def handle_event("change_student", %{"student" => params}, socket) do
+  def handle_event("update_student", %{"student" => params}, socket) do
     send(self(), {:update_student, socket.assigns.index, params})
     {:noreply, socket}
   end

@@ -15,6 +15,12 @@ defmodule StudentList.Directory.Address do
     timestamps()
   end
 
+  def creation_changeset(address \\ %StudentList.Directory.Address{}, attrs) do
+    IO.inspect(attrs, label: "address creation")
+    address
+    |> cast(attrs, [:address1, :address2, :city, :state, :zip, :phone])
+  end
+
   @doc false
   def changeset(address, attrs) do
     address
