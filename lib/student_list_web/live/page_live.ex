@@ -2,7 +2,7 @@ defmodule StudentListWeb.PageLive do
   use Surface.LiveView
 
   alias Surface.Components.Form
-  alias Surface.Components.Form.{Field, Label, TextInput}
+  alias Surface.Components.Form.{Field, Label, TextArea}
 
   alias Ecto.Multi
 
@@ -72,7 +72,7 @@ defmodule StudentListWeb.PageLive do
           <Field name="note">
             <Label>Notes</Label>
             <div class="control">
-              <TextInput value={@notes} id={"notes-input"} />
+              <TextArea rows={"4"} value={@notes} id={"notes-input"} opts={placeholder: "Anything you want the fine folks compiling the directory to know. Tell us if you are on the PTO, a classroom representative, on the School Committee, on the School Council, or on the Safety Committee."} />
             </div>
           </Field>
         </Form>
