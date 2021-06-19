@@ -178,7 +178,7 @@ defmodule StudentList.DirectoryTest do
         |> Enum.into(@valid_attrs)
         |> Directory.create_address()
 
-      address
+      address |> Repo.preload([:adults])
     end
 
     test "paginate_addresses/1 returns paginated list of addresses" do
@@ -357,7 +357,7 @@ defmodule StudentList.DirectoryTest do
         |> Enum.into(@valid_attrs)
         |> Directory.create_adult()
 
-      adult
+      adult |> Repo.preload([:address])
     end
 
     test "paginate_adults/1 returns paginated list of adults" do

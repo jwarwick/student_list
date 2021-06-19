@@ -5,16 +5,20 @@ defmodule StudentList.Directory do
 
   import Ecto.Query, warn: false
   alias StudentList.Repo
-import Torch.Helpers, only: [sort: 1, paginate: 4]
-import Filtrex.Type.Config
 
-alias StudentList.Directory.Bus
-alias StudentList.Directory.Class
+  import Torch.Helpers, only: [sort: 1, paginate: 4]
+  import Filtrex.Type.Config
 
-@pagination [page_size: 15]
-@pagination_distance 5
+  alias StudentList.Directory.Bus
+  alias StudentList.Directory.Class
+  alias StudentList.Directory.Address
+  alias StudentList.Directory.Student
+  alias StudentList.Directory.Adult
 
- 
+  @pagination [page_size: 15]
+  @pagination_distance 5
+
+
   @doc """
   Get a keyword list of buses sorted by `display_order`.
   """
@@ -33,781 +37,758 @@ alias StudentList.Directory.Class
     |> Keyword.new(fn {a, b} -> {String.to_atom(a), b} end)
   end
 
-@doc """
-Paginate the list of buses using filtrex
-filters.
+  @doc """
+  Paginate the list of buses using filtrex
+  filters.
 
-## Examples
+  ## Examples
 
-    iex> list_buses(%{})
-    %{buses: [%Bus{}], ...}
-"""
-@spec paginate_buses(map) :: {:ok, map} | {:error, any}
-def paginate_buses(params \\ %{}) do
-  params =
-    params
-    |> Map.put_new("sort_direction", "desc")
-    |> Map.put_new("sort_field", "inserted_at")
+  iex> list_buses(%{})
+  %{buses: [%Bus{}], ...}
+  """
+  @spec paginate_buses(map) :: {:ok, map} | {:error, any}
+  def paginate_buses(params \\ %{}) do
+    params =
+      params
+      |> Map.put_new("sort_direction", "desc")
+      |> Map.put_new("sort_field", "inserted_at")
 
-  {:ok, sort_direction} = Map.fetch(params, "sort_direction")
-  {:ok, sort_field} = Map.fetch(params, "sort_field")
+    {:ok, sort_direction} = Map.fetch(params, "sort_direction")
+    {:ok, sort_field} = Map.fetch(params, "sort_field")
 
-  with {:ok, filter} <- Filtrex.parse_params(filter_config(:buses), params["bus"] || %{}),
-       %Scrivener.Page{} = page <- do_paginate_buses(filter, params) do
-    {:ok,
-      %{
-        buses: page.entries,
-        page_number: page.page_number,
-        page_size: page.page_size,
-        total_pages: page.total_pages,
-        total_entries: page.total_entries,
-        distance: @pagination_distance,
-        sort_field: sort_field,
-        sort_direction: sort_direction
-      }
-    }
-  else
-    {:error, error} -> {:error, error}
-    error -> {:error, error}
+    with {:ok, filter} <- Filtrex.parse_params(filter_config(:buses), params["bus"] || %{}),
+         %Scrivener.Page{} = page <- do_paginate_buses(filter, params) do
+           {:ok,
+             %{
+               buses: page.entries,
+               page_number: page.page_number,
+               page_size: page.page_size,
+               total_pages: page.total_pages,
+               total_entries: page.total_entries,
+               distance: @pagination_distance,
+               sort_field: sort_field,
+               sort_direction: sort_direction
+             }
+           }
+    else
+      {:error, error} -> {:error, error}
+      error -> {:error, error}
+         end
   end
-end
 
-defp do_paginate_buses(filter, params) do
-  Bus
-  |> Filtrex.query(filter)
-  |> order_by(^sort(params))
-  |> paginate(Repo, params, @pagination)
-end
+  defp do_paginate_buses(filter, params) do
+    Bus
+    |> Filtrex.query(filter)
+    |> order_by(^sort(params))
+    |> paginate(Repo, params, @pagination)
+  end
 
-@doc """
-Returns the list of buses.
+  @doc """
+  Returns the list of buses.
 
-## Examples
+  ## Examples
 
-    iex> list_buses()
-    [%Bus{}, ...]
+  iex> list_buses()
+  [%Bus{}, ...]
 
-"""
-def list_buses do
-  Repo.all(Bus)
-end
+  """
+  def list_buses do
+    Repo.all(Bus)
+  end
 
-@doc """
-Gets a single bus.
+  @doc """
+  Gets a single bus.
 
-Raises `Ecto.NoResultsError` if the Bus does not exist.
+  Raises `Ecto.NoResultsError` if the Bus does not exist.
 
-## Examples
+  ## Examples
 
-    iex> get_bus!(123)
-    %Bus{}
-
-    iex> get_bus!(456)
-    ** (Ecto.NoResultsError)
-
-"""
-def get_bus!(id), do: Repo.get!(Bus, id)
-
-@doc """
-Creates a bus.
-
-## Examples
-
-    iex> create_bus(%{field: value})
-    {:ok, %Bus{}}
-
-    iex> create_bus(%{field: bad_value})
-    {:error, %Ecto.Changeset{}}
-
-"""
-def create_bus(attrs \\ %{}) do
+  iex> get_bus!(123)
   %Bus{}
-  |> Bus.changeset(attrs)
-  |> Repo.insert()
-end
 
-@doc """
-Updates a bus.
+  iex> get_bus!(456)
+  ** (Ecto.NoResultsError)
 
-## Examples
+  """
+  def get_bus!(id), do: Repo.get!(Bus, id)
 
-    iex> update_bus(bus, %{field: new_value})
-    {:ok, %Bus{}}
+  @doc """
+  Creates a bus.
 
-    iex> update_bus(bus, %{field: bad_value})
-    {:error, %Ecto.Changeset{}}
+  ## Examples
 
-"""
-def update_bus(%Bus{} = bus, attrs) do
-  bus
-  |> Bus.changeset(attrs)
-  |> Repo.update()
-end
+  iex> create_bus(%{field: value})
+  {:ok, %Bus{}}
 
-@doc """
-Deletes a Bus.
+  iex> create_bus(%{field: bad_value})
+  {:error, %Ecto.Changeset{}}
 
-## Examples
+  """
+  def create_bus(attrs \\ %{}) do
+    %Bus{}
+    |> Bus.changeset(attrs)
+    |> Repo.insert()
+  end
 
-    iex> delete_bus(bus)
-    {:ok, %Bus{}}
+  @doc """
+  Updates a bus.
 
-    iex> delete_bus(bus)
-    {:error, %Ecto.Changeset{}}
+  ## Examples
 
-"""
-def delete_bus(%Bus{} = bus) do
-  Repo.delete(bus)
-end
+  iex> update_bus(bus, %{field: new_value})
+  {:ok, %Bus{}}
 
-@doc """
-Returns an `%Ecto.Changeset{}` for tracking bus changes.
+  iex> update_bus(bus, %{field: bad_value})
+  {:error, %Ecto.Changeset{}}
 
-## Examples
+  """
+  def update_bus(%Bus{} = bus, attrs) do
+    bus
+    |> Bus.changeset(attrs)
+    |> Repo.update()
+  end
 
-    iex> change_bus(bus)
-    %Ecto.Changeset{source: %Bus{}}
+  @doc """
+  Deletes a Bus.
 
-"""
-def change_bus(%Bus{} = bus, attrs \\ %{}) do
-  Bus.changeset(bus, attrs)
-end
+  ## Examples
 
-defp filter_config(:buses) do
-  defconfig do
-    text :name
+  iex> delete_bus(bus)
+  {:ok, %Bus{}}
+
+  iex> delete_bus(bus)
+  {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_bus(%Bus{} = bus) do
+    Repo.delete(bus)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking bus changes.
+
+  ## Examples
+
+  iex> change_bus(bus)
+  %Ecto.Changeset{source: %Bus{}}
+
+  """
+  def change_bus(%Bus{} = bus, attrs \\ %{}) do
+    Bus.changeset(bus, attrs)
+  end
+
+  defp filter_config(:buses) do
+    defconfig do
+      text :name
       number :display_order
       boolean :should_display
-      
+
+    end
   end
-end
-import Torch.Helpers, only: [sort: 1, paginate: 4]
-import Filtrex.Type.Config
-
-
-@pagination [page_size: 15]
-@pagination_distance 5
-
-@doc """
-Paginate the list of classes using filtrex
-filters.
-
-## Examples
-
-    iex> list_classes(%{})
-    %{classes: [%Class{}], ...}
-"""
-@spec paginate_classes(map) :: {:ok, map} | {:error, any}
-def paginate_classes(params \\ %{}) do
-  params =
-    params
-    |> Map.put_new("sort_direction", "desc")
-    |> Map.put_new("sort_field", "inserted_at")
-
-  {:ok, sort_direction} = Map.fetch(params, "sort_direction")
-  {:ok, sort_field} = Map.fetch(params, "sort_field")
-
-  with {:ok, filter} <- Filtrex.parse_params(filter_config(:classes), params["class"] || %{}),
-       %Scrivener.Page{} = page <- do_paginate_classes(filter, params) do
-    {:ok,
-      %{
-        classes: page.entries,
-        page_number: page.page_number,
-        page_size: page.page_size,
-        total_pages: page.total_pages,
-        total_entries: page.total_entries,
-        distance: @pagination_distance,
-        sort_field: sort_field,
-        sort_direction: sort_direction
-      }
-    }
-  else
-    {:error, error} -> {:error, error}
-    error -> {:error, error}
-  end
-end
-
-defp do_paginate_classes(filter, params) do
-  Class
-  |> Filtrex.query(filter)
-  |> order_by(^sort(params))
-  |> paginate(Repo, params, @pagination)
-end
-
-@doc """
-Returns the list of classes.
-
-## Examples
-
-    iex> list_classes()
-    [%Class{}, ...]
-
-"""
-def list_classes do
-  Repo.all(Class)
-end
-
-@doc """
-Gets a single class.
-
-Raises `Ecto.NoResultsError` if the Class does not exist.
-
-## Examples
-
-    iex> get_class!(123)
-    %Class{}
-
-    iex> get_class!(456)
-    ** (Ecto.NoResultsError)
-
-"""
-def get_class!(id), do: Repo.get!(Class, id)
-
-@doc """
-Creates a class.
-
-## Examples
-
-    iex> create_class(%{field: value})
-    {:ok, %Class{}}
-
-    iex> create_class(%{field: bad_value})
-    {:error, %Ecto.Changeset{}}
-
-"""
-def create_class(attrs \\ %{}) do
-  %Class{}
-  |> Class.changeset(attrs)
-  |> Repo.insert()
-end
-
-@doc """
-Updates a class.
-
-## Examples
-
-    iex> update_class(class, %{field: new_value})
-    {:ok, %Class{}}
-
-    iex> update_class(class, %{field: bad_value})
-    {:error, %Ecto.Changeset{}}
-
-"""
-def update_class(%Class{} = class, attrs) do
-  class
-  |> Class.changeset(attrs)
-  |> Repo.update()
-end
-
-@doc """
-Deletes a Class.
-
-## Examples
-
-    iex> delete_class(class)
-    {:ok, %Class{}}
-
-    iex> delete_class(class)
-    {:error, %Ecto.Changeset{}}
-
-"""
-def delete_class(%Class{} = class) do
-  Repo.delete(class)
-end
-
-@doc """
-Returns an `%Ecto.Changeset{}` for tracking class changes.
-
-## Examples
-
-    iex> change_class(class)
-    %Ecto.Changeset{source: %Class{}}
-
-"""
-def change_class(%Class{} = class, attrs \\ %{}) do
-  Class.changeset(class, attrs)
-end
-
-defp filter_config(:classes) do
-  defconfig do
-    text :name
+  defp filter_config(:classes) do
+    defconfig do
+      text :name
       text :teacher
       number :display_order
-      
+
+    end
   end
-end
-import Torch.Helpers, only: [sort: 1, paginate: 4]
-import Filtrex.Type.Config
-
-alias StudentList.Directory.Address
-
-@pagination [page_size: 15]
-@pagination_distance 5
-
-@doc """
-Paginate the list of addresses using filtrex
-filters.
-
-## Examples
-
-    iex> list_addresses(%{})
-    %{addresses: [%Address{}], ...}
-"""
-@spec paginate_addresses(map) :: {:ok, map} | {:error, any}
-def paginate_addresses(params \\ %{}) do
-  params =
-    params
-    |> Map.put_new("sort_direction", "desc")
-    |> Map.put_new("sort_field", "inserted_at")
-
-  {:ok, sort_direction} = Map.fetch(params, "sort_direction")
-  {:ok, sort_field} = Map.fetch(params, "sort_field")
-
-  with {:ok, filter} <- Filtrex.parse_params(filter_config(:addresses), params["address"] || %{}),
-       %Scrivener.Page{} = page <- do_paginate_addresses(filter, params) do
-    {:ok,
-      %{
-        addresses: page.entries,
-        page_number: page.page_number,
-        page_size: page.page_size,
-        total_pages: page.total_pages,
-        total_entries: page.total_entries,
-        distance: @pagination_distance,
-        sort_field: sort_field,
-        sort_direction: sort_direction
-      }
-    }
-  else
-    {:error, error} -> {:error, error}
-    error -> {:error, error}
-  end
-end
-
-defp do_paginate_addresses(filter, params) do
-  Address
-  |> Filtrex.query(filter)
-  |> order_by(^sort(params))
-  |> paginate(Repo, params, @pagination)
-end
-
-@doc """
-Returns the list of addresses.
-
-## Examples
-
-    iex> list_addresses()
-    [%Address{}, ...]
-
-"""
-def list_addresses do
-  Repo.all(Address)
-end
-
-@doc """
-Gets a single address.
-
-Raises `Ecto.NoResultsError` if the Address does not exist.
-
-## Examples
-
-    iex> get_address!(123)
-    %Address{}
-
-    iex> get_address!(456)
-    ** (Ecto.NoResultsError)
-
-"""
-def get_address!(id), do: Repo.get!(Address, id) |> Repo.preload([:adults])
-
-@doc """
-Creates a address.
-
-## Examples
-
-    iex> create_address(%{field: value})
-    {:ok, %Address{}}
-
-    iex> create_address(%{field: bad_value})
-    {:error, %Ecto.Changeset{}}
-
-"""
-def create_address(attrs \\ %{}) do
-  %Address{}
-  |> Address.changeset(attrs)
-  |> Repo.insert()
-end
-
-@doc """
-Updates a address.
-
-## Examples
-
-    iex> update_address(address, %{field: new_value})
-    {:ok, %Address{}}
-
-    iex> update_address(address, %{field: bad_value})
-    {:error, %Ecto.Changeset{}}
-
-"""
-def update_address(%Address{} = address, attrs) do
-  address
-  |> Address.changeset(attrs)
-  |> Repo.update()
-end
-
-@doc """
-Deletes a Address.
-
-## Examples
-
-    iex> delete_address(address)
-    {:ok, %Address{}}
-
-    iex> delete_address(address)
-    {:error, %Ecto.Changeset{}}
-
-"""
-def delete_address(%Address{} = address) do
-  Repo.delete(address)
-end
-
-@doc """
-Returns an `%Ecto.Changeset{}` for tracking address changes.
-
-## Examples
-
-    iex> change_address(address)
-    %Ecto.Changeset{source: %Address{}}
-
-"""
-def change_address(%Address{} = address, attrs \\ %{}) do
-  Address.changeset(address, attrs)
-end
-
-defp filter_config(:addresses) do
-  defconfig do
-    text :address1
+  defp filter_config(:addresses) do
+    defconfig do
+      text :address1
       text :address2
       text :city
       text :state
       text :zip
       text :phone
-      
+
+    end
   end
-end
-import Torch.Helpers, only: [sort: 1, paginate: 4]
-import Filtrex.Type.Config
-
-alias StudentList.Directory.Student
-
-@pagination [page_size: 15]
-@pagination_distance 5
-
-@doc """
-Paginate the list of students using filtrex
-filters.
-
-## Examples
-
-    iex> list_students(%{})
-    %{students: [%Student{}], ...}
-"""
-@spec paginate_students(map) :: {:ok, map} | {:error, any}
-def paginate_students(params \\ %{}) do
-  params =
-    params
-    |> Map.put_new("sort_direction", "desc")
-    |> Map.put_new("sort_field", "inserted_at")
-
-  {:ok, sort_direction} = Map.fetch(params, "sort_direction")
-  {:ok, sort_field} = Map.fetch(params, "sort_field")
-
-  with {:ok, filter} <- Filtrex.parse_params(filter_config(:students), params["student"] || %{}),
-       %Scrivener.Page{} = page <- do_paginate_students(filter, params) do
-    {:ok,
-      %{
-        students: page.entries,
-        page_number: page.page_number,
-        page_size: page.page_size,
-        total_pages: page.total_pages,
-        total_entries: page.total_entries,
-        distance: @pagination_distance,
-        sort_field: sort_field,
-        sort_direction: sort_direction
-      }
-    }
-  else
-    {:error, error} -> {:error, error}
-    error -> {:error, error}
-  end
-end
-
-defp do_paginate_students(filter, params) do
-  Student
-  |> Filtrex.query(filter)
-  |> order_by(^sort(params))
-  |> preload([:bus, :class])
-  |> paginate(Repo, params, @pagination)
-end
-
-@doc """
-Returns the list of students.
-
-## Examples
-
-    iex> list_students()
-    [%Student{}, ...]
-
-"""
-def list_students do
-  Repo.all(Student) |> Repo.preload([:bus, :class])
-end
-
-@doc """
-Gets a single student.
-
-Raises `Ecto.NoResultsError` if the Student does not exist.
-
-## Examples
-
-    iex> get_student!(123)
-    %Student{}
-
-    iex> get_student!(456)
-    ** (Ecto.NoResultsError)
-
-"""
-def get_student!(id), do: Repo.get!(Student, id) |> Repo.preload([:bus, :class])
-
-@doc """
-Creates a student.
-
-## Examples
-
-    iex> create_student(%{field: value})
-    {:ok, %Student{}}
-
-    iex> create_student(%{field: bad_value})
-    {:error, %Ecto.Changeset{}}
-
-"""
-def create_student(attrs \\ %{}) do
-  %Student{}
-  |> Student.changeset(attrs)
-  |> Repo.insert()
-end
-
-@doc """
-Updates a student.
-
-## Examples
-
-    iex> update_student(student, %{field: new_value})
-    {:ok, %Student{}}
-
-    iex> update_student(student, %{field: bad_value})
-    {:error, %Ecto.Changeset{}}
-
-"""
-def update_student(%Student{} = student, attrs) do
-  student
-  |> Student.changeset(attrs)
-  |> Repo.update()
-end
-
-@doc """
-Deletes a Student.
-
-## Examples
-
-    iex> delete_student(student)
-    {:ok, %Student{}}
-
-    iex> delete_student(student)
-    {:error, %Ecto.Changeset{}}
-
-"""
-def delete_student(%Student{} = student) do
-  Repo.delete(student)
-end
-
-@doc """
-Returns an `%Ecto.Changeset{}` for tracking student changes.
-
-## Examples
-
-    iex> change_student(student)
-    %Ecto.Changeset{source: %Student{}}
-
-"""
-def change_student(%Student{} = student, attrs \\ %{}) do
-  Student.changeset(student, attrs)
-end
-
-defp filter_config(:students) do
-  defconfig do
-    text :first_name
+  defp filter_config(:students) do
+    defconfig do
+      text :first_name
       text :last_name
       text :notes
-      
+    end
   end
-end
-import Torch.Helpers, only: [sort: 1, paginate: 4]
-import Filtrex.Type.Config
-
-alias StudentList.Directory.Adult
-
-@pagination [page_size: 15]
-@pagination_distance 5
-
-@doc """
-Paginate the list of adults using filtrex
-filters.
-
-## Examples
-
-    iex> list_adults(%{})
-    %{adults: [%Adult{}], ...}
-"""
-@spec paginate_adults(map) :: {:ok, map} | {:error, any}
-def paginate_adults(params \\ %{}) do
-  params =
-    params
-    |> Map.put_new("sort_direction", "desc")
-    |> Map.put_new("sort_field", "inserted_at")
-
-  {:ok, sort_direction} = Map.fetch(params, "sort_direction")
-  {:ok, sort_field} = Map.fetch(params, "sort_field")
-
-  with {:ok, filter} <- Filtrex.parse_params(filter_config(:adults), params["adult"] || %{}),
-       %Scrivener.Page{} = page <- do_paginate_adults(filter, params) do
-    {:ok,
-      %{
-        adults: page.entries,
-        page_number: page.page_number,
-        page_size: page.page_size,
-        total_pages: page.total_pages,
-        total_entries: page.total_entries,
-        distance: @pagination_distance,
-        sort_field: sort_field,
-        sort_direction: sort_direction
-      }
-    }
-  else
-    {:error, error} -> {:error, error}
-    error -> {:error, error}
-  end
-end
-
-defp do_paginate_adults(filter, params) do
-  Adult
-  |> Filtrex.query(filter)
-  |> order_by(^sort(params))
-  |> preload([:address])
-  |> paginate(Repo, params, @pagination)
-end
-
-@doc """
-Returns the list of adults.
-
-## Examples
-
-    iex> list_adults()
-    [%Adult{}, ...]
-
-"""
-def list_adults do
-  Repo.all(Adult)
-end
-
-@doc """
-Gets a single adult.
-
-Raises `Ecto.NoResultsError` if the Adult does not exist.
-
-## Examples
-
-    iex> get_adult!(123)
-    %Adult{}
-
-    iex> get_adult!(456)
-    ** (Ecto.NoResultsError)
-
-"""
-def get_adult!(id), do: Repo.get!(Adult, id) |> Repo.preload([:address])
-
-@doc """
-Creates a adult.
-
-## Examples
-
-    iex> create_adult(%{field: value})
-    {:ok, %Adult{}}
-
-    iex> create_adult(%{field: bad_value})
-    {:error, %Ecto.Changeset{}}
-
-"""
-def create_adult(attrs \\ %{}) do
-  %Adult{}
-  |> Adult.changeset(attrs)
-  |> Repo.insert()
-end
-
-@doc """
-Updates a adult.
-
-## Examples
-
-    iex> update_adult(adult, %{field: new_value})
-    {:ok, %Adult{}}
-
-    iex> update_adult(adult, %{field: bad_value})
-    {:error, %Ecto.Changeset{}}
-
-"""
-def update_adult(%Adult{} = adult, attrs) do
-  adult
-  |> Adult.changeset(attrs)
-  |> Repo.update()
-end
-
-@doc """
-Deletes a Adult.
-
-## Examples
-
-    iex> delete_adult(adult)
-    {:ok, %Adult{}}
-
-    iex> delete_adult(adult)
-    {:error, %Ecto.Changeset{}}
-
-"""
-def delete_adult(%Adult{} = adult) do
-  Repo.delete(adult)
-end
-
-@doc """
-Returns an `%Ecto.Changeset{}` for tracking adult changes.
-
-## Examples
-
-    iex> change_adult(adult)
-    %Ecto.Changeset{source: %Adult{}}
-
-"""
-def change_adult(%Adult{} = adult, attrs \\ %{}) do
-  Adult.changeset(adult, attrs)
-end
-
-defp filter_config(:adults) do
-  defconfig do
-    text :first_name
+  defp filter_config(:adults) do
+    defconfig do
+      text :first_name
       text :last_name
       text :email
       text :mobile_phone
-      
+
+    end
   end
-end
+
+
+  @doc """
+  Paginate the list of classes using filtrex
+  filters.
+
+  ## Examples
+
+  iex> list_classes(%{})
+  %{classes: [%Class{}], ...}
+  """
+  @spec paginate_classes(map) :: {:ok, map} | {:error, any}
+  def paginate_classes(params \\ %{}) do
+    params =
+      params
+      |> Map.put_new("sort_direction", "desc")
+      |> Map.put_new("sort_field", "inserted_at")
+
+    {:ok, sort_direction} = Map.fetch(params, "sort_direction")
+    {:ok, sort_field} = Map.fetch(params, "sort_field")
+
+    with {:ok, filter} <- Filtrex.parse_params(filter_config(:classes), params["class"] || %{}),
+         %Scrivener.Page{} = page <- do_paginate_classes(filter, params) do
+           {:ok,
+             %{
+               classes: page.entries,
+               page_number: page.page_number,
+               page_size: page.page_size,
+               total_pages: page.total_pages,
+               total_entries: page.total_entries,
+               distance: @pagination_distance,
+               sort_field: sort_field,
+               sort_direction: sort_direction
+             }
+           }
+    else
+      {:error, error} -> {:error, error}
+      error -> {:error, error}
+         end
+  end
+
+  defp do_paginate_classes(filter, params) do
+    Class
+    |> Filtrex.query(filter)
+    |> order_by(^sort(params))
+    |> paginate(Repo, params, @pagination)
+  end
+
+  @doc """
+  Returns the list of classes.
+
+  ## Examples
+
+  iex> list_classes()
+  [%Class{}, ...]
+
+  """
+  def list_classes do
+    Repo.all(Class)
+  end
+
+  @doc """
+  Gets a single class.
+
+  Raises `Ecto.NoResultsError` if the Class does not exist.
+
+  ## Examples
+
+  iex> get_class!(123)
+  %Class{}
+
+  iex> get_class!(456)
+  ** (Ecto.NoResultsError)
+
+  """
+  def get_class!(id), do: Repo.get!(Class, id)
+
+  @doc """
+  Creates a class.
+
+  ## Examples
+
+  iex> create_class(%{field: value})
+  {:ok, %Class{}}
+
+  iex> create_class(%{field: bad_value})
+  {:error, %Ecto.Changeset{}}
+
+  """
+  def create_class(attrs \\ %{}) do
+    %Class{}
+    |> Class.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a class.
+
+  ## Examples
+
+  iex> update_class(class, %{field: new_value})
+  {:ok, %Class{}}
+
+  iex> update_class(class, %{field: bad_value})
+  {:error, %Ecto.Changeset{}}
+
+  """
+  def update_class(%Class{} = class, attrs) do
+    class
+    |> Class.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a Class.
+
+  ## Examples
+
+  iex> delete_class(class)
+  {:ok, %Class{}}
+
+  iex> delete_class(class)
+  {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_class(%Class{} = class) do
+    Repo.delete(class)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking class changes.
+
+  ## Examples
+
+  iex> change_class(class)
+  %Ecto.Changeset{source: %Class{}}
+
+  """
+  def change_class(%Class{} = class, attrs \\ %{}) do
+    Class.changeset(class, attrs)
+  end
+
+
+
+  @doc """
+  Paginate the list of addresses using filtrex
+  filters.
+
+  ## Examples
+
+  iex> list_addresses(%{})
+  %{addresses: [%Address{}], ...}
+  """
+  @spec paginate_addresses(map) :: {:ok, map} | {:error, any}
+  def paginate_addresses(params \\ %{}) do
+    params =
+      params
+      |> Map.put_new("sort_direction", "desc")
+      |> Map.put_new("sort_field", "inserted_at")
+
+    {:ok, sort_direction} = Map.fetch(params, "sort_direction")
+    {:ok, sort_field} = Map.fetch(params, "sort_field")
+
+    with {:ok, filter} <- Filtrex.parse_params(filter_config(:addresses), params["address"] || %{}),
+         %Scrivener.Page{} = page <- do_paginate_addresses(filter, params) do
+           {:ok,
+             %{
+               addresses: page.entries,
+               page_number: page.page_number,
+               page_size: page.page_size,
+               total_pages: page.total_pages,
+               total_entries: page.total_entries,
+               distance: @pagination_distance,
+               sort_field: sort_field,
+               sort_direction: sort_direction
+             }
+           }
+    else
+      {:error, error} -> {:error, error}
+      error -> {:error, error}
+         end
+  end
+
+  defp do_paginate_addresses(filter, params) do
+    Address
+    |> Filtrex.query(filter)
+    |> order_by(^sort(params))
+    |> paginate(Repo, params, @pagination)
+  end
+
+  @doc """
+  Returns the list of addresses.
+
+  ## Examples
+
+  iex> list_addresses()
+  [%Address{}, ...]
+
+  """
+  def list_addresses do
+    Repo.all(Address) |> Repo.preload([:adults])
+  end
+
+  @doc """
+  Gets a single address.
+
+  Raises `Ecto.NoResultsError` if the Address does not exist.
+
+  ## Examples
+
+  iex> get_address!(123)
+  %Address{}
+
+  iex> get_address!(456)
+  ** (Ecto.NoResultsError)
+
+  """
+  def get_address!(id), do: Repo.get!(Address, id) |> Repo.preload([:adults])
+
+  @doc """
+  Creates a address.
+
+  ## Examples
+
+  iex> create_address(%{field: value})
+  {:ok, %Address{}}
+
+  iex> create_address(%{field: bad_value})
+  {:error, %Ecto.Changeset{}}
+
+  """
+  def create_address(attrs \\ %{}) do
+    %Address{}
+    |> Address.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a address.
+
+  ## Examples
+
+  iex> update_address(address, %{field: new_value})
+  {:ok, %Address{}}
+
+  iex> update_address(address, %{field: bad_value})
+  {:error, %Ecto.Changeset{}}
+
+  """
+  def update_address(%Address{} = address, attrs) do
+    address
+    |> Address.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a Address.
+
+  ## Examples
+
+  iex> delete_address(address)
+  {:ok, %Address{}}
+
+  iex> delete_address(address)
+  {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_address(%Address{} = address) do
+    Repo.delete(address)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking address changes.
+
+  ## Examples
+
+  iex> change_address(address)
+  %Ecto.Changeset{source: %Address{}}
+
+  """
+  def change_address(%Address{} = address, attrs \\ %{}) do
+    Address.changeset(address, attrs)
+  end
+
+
+
+  @doc """
+  Paginate the list of students using filtrex
+  filters.
+
+  ## Examples
+
+  iex> list_students(%{})
+  %{students: [%Student{}], ...}
+  """
+  @spec paginate_students(map) :: {:ok, map} | {:error, any}
+  def paginate_students(params \\ %{}) do
+    params =
+      params
+      |> Map.put_new("sort_direction", "desc")
+      |> Map.put_new("sort_field", "inserted_at")
+
+    {:ok, sort_direction} = Map.fetch(params, "sort_direction")
+    {:ok, sort_field} = Map.fetch(params, "sort_field")
+
+    with {:ok, filter} <- Filtrex.parse_params(filter_config(:students), params["student"] || %{}),
+         %Scrivener.Page{} = page <- do_paginate_students(filter, params) do
+           {:ok,
+             %{
+               students: page.entries,
+               page_number: page.page_number,
+               page_size: page.page_size,
+               total_pages: page.total_pages,
+               total_entries: page.total_entries,
+               distance: @pagination_distance,
+               sort_field: sort_field,
+               sort_direction: sort_direction
+             }
+           }
+    else
+      {:error, error} -> {:error, error}
+      error -> {:error, error}
+         end
+  end
+
+  defp do_paginate_students(filter, params) do
+    Student
+    |> Filtrex.query(filter)
+    |> order_by(^sort(params))
+    |> preload([:bus, :class])
+    |> paginate(Repo, params, @pagination)
+  end
+
+  @doc """
+  Returns the list of students.
+
+  ## Examples
+
+  iex> list_students()
+  [%Student{}, ...]
+
+  """
+  def list_students do
+    Repo.all(Student) |> Repo.preload([:bus, :class])
+  end
+
+  @doc """
+  Gets a single student.
+
+  Raises `Ecto.NoResultsError` if the Student does not exist.
+
+  ## Examples
+
+  iex> get_student!(123)
+  %Student{}
+
+  iex> get_student!(456)
+  ** (Ecto.NoResultsError)
+
+  """
+  def get_student!(id), do: Repo.get!(Student, id) |> Repo.preload([:bus, :class])
+
+  @doc """
+  Creates a student.
+
+  ## Examples
+
+  iex> create_student(%{field: value})
+  {:ok, %Student{}}
+
+  iex> create_student(%{field: bad_value})
+  {:error, %Ecto.Changeset{}}
+
+  """
+  def create_student(attrs \\ %{}) do
+    %Student{}
+    |> Student.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a student.
+
+  ## Examples
+
+  iex> update_student(student, %{field: new_value})
+  {:ok, %Student{}}
+
+  iex> update_student(student, %{field: bad_value})
+  {:error, %Ecto.Changeset{}}
+
+  """
+  def update_student(%Student{} = student, attrs) do
+    student
+    |> Student.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a Student.
+
+  ## Examples
+
+  iex> delete_student(student)
+  {:ok, %Student{}}
+
+  iex> delete_student(student)
+  {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_student(%Student{} = student) do
+    Repo.delete(student)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking student changes.
+
+  ## Examples
+
+  iex> change_student(student)
+  %Ecto.Changeset{source: %Student{}}
+
+  """
+  def change_student(%Student{} = student, attrs \\ %{}) do
+    Student.changeset(student, attrs)
+  end
+
+
+
+
+  @doc """
+  Paginate the list of adults using filtrex
+  filters.
+
+  ## Examples
+
+  iex> list_adults(%{})
+  %{adults: [%Adult{}], ...}
+  """
+  @spec paginate_adults(map) :: {:ok, map} | {:error, any}
+  def paginate_adults(params \\ %{}) do
+    params =
+      params
+      |> Map.put_new("sort_direction", "desc")
+      |> Map.put_new("sort_field", "inserted_at")
+
+    {:ok, sort_direction} = Map.fetch(params, "sort_direction")
+    {:ok, sort_field} = Map.fetch(params, "sort_field")
+
+    with {:ok, filter} <- Filtrex.parse_params(filter_config(:adults), params["adult"] || %{}),
+         %Scrivener.Page{} = page <- do_paginate_adults(filter, params) do
+           {:ok,
+             %{
+               adults: page.entries,
+               page_number: page.page_number,
+               page_size: page.page_size,
+               total_pages: page.total_pages,
+               total_entries: page.total_entries,
+               distance: @pagination_distance,
+               sort_field: sort_field,
+               sort_direction: sort_direction
+             }
+           }
+    else
+      {:error, error} -> {:error, error}
+      error -> {:error, error}
+         end
+  end
+
+  defp do_paginate_adults(filter, params) do
+    Adult
+    |> Filtrex.query(filter)
+    |> order_by(^sort(params))
+    |> preload([:address])
+    |> paginate(Repo, params, @pagination)
+  end
+
+  @doc """
+  Returns the list of adults.
+
+  ## Examples
+
+  iex> list_adults()
+  [%Adult{}, ...]
+
+  """
+  def list_adults do
+    Repo.all(Adult) |> Repo.preload([:address])
+  end
+
+  @doc """
+  Gets a single adult.
+
+  Raises `Ecto.NoResultsError` if the Adult does not exist.
+
+  ## Examples
+
+  iex> get_adult!(123)
+  %Adult{}
+
+  iex> get_adult!(456)
+  ** (Ecto.NoResultsError)
+
+  """
+  def get_adult!(id), do: Repo.get!(Adult, id) |> Repo.preload([:address])
+
+  @doc """
+  Creates a adult.
+
+  ## Examples
+
+  iex> create_adult(%{field: value})
+  {:ok, %Adult{}}
+
+  iex> create_adult(%{field: bad_value})
+  {:error, %Ecto.Changeset{}}
+
+  """
+  def create_adult(attrs \\ %{}) do
+    %Adult{}
+    |> Adult.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a adult.
+
+  ## Examples
+
+  iex> update_adult(adult, %{field: new_value})
+  {:ok, %Adult{}}
+
+  iex> update_adult(adult, %{field: bad_value})
+  {:error, %Ecto.Changeset{}}
+
+  """
+  def update_adult(%Adult{} = adult, attrs) do
+    adult
+    |> Adult.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a Adult.
+
+  ## Examples
+
+  iex> delete_adult(adult)
+  {:ok, %Adult{}}
+
+  iex> delete_adult(adult)
+  {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_adult(%Adult{} = adult) do
+    Repo.delete(adult)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking adult changes.
+
+  ## Examples
+
+  iex> change_adult(adult)
+  %Ecto.Changeset{source: %Adult{}}
+
+  """
+  def change_adult(%Adult{} = adult, attrs \\ %{}) do
+    Adult.changeset(adult, attrs)
+  end
+
 end

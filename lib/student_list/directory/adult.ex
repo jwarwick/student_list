@@ -19,7 +19,7 @@ defmodule StudentList.Directory.Adult do
   end
 
   @doc false
-  def changeset(adult, attrs) do
+  def changeset(adult, attrs \\ %{}) do
     adult
     |> cast(attrs, [:first_name, :last_name, :email, :mobile_phone])
     |> validate_required([:first_name, :last_name])
