@@ -1,9 +1,12 @@
 defmodule StudentListWeb.PageLive do
   use Surface.LiveView
 
-  alias StudentList.Repo
+  alias Surface.Components.Form
+  alias Surface.Components.Form.{Field, Label, TextInput}
+
   alias Ecto.Multi
 
+  alias StudentList.Repo
   alias StudentList.Directory
   alias StudentList.Directory.{Address, Student}
 
@@ -12,6 +15,7 @@ defmodule StudentListWeb.PageLive do
   data submitted, :boolean, default: false
   data students, :list, default: [%{}]
   data addresses, :list, default: [%{"adults" => [%{}]}]
+  data notes, :string, default: ""
 
   prop sorted_buses, :list
   prop sorted_classrooms, :list
@@ -37,7 +41,7 @@ defmodule StudentListWeb.PageLive do
     <div :if={!@submitted}>
       <Heading />
 
-      <section>
+      <section class="students">
         <div class="student_list">
         <StudentEntry
           :for.with_index={{s, index} <- @students}
@@ -51,7 +55,7 @@ defmodule StudentListWeb.PageLive do
         <button type="button" class="button is-info is-small" :on-click="add_student">Add Another Student</button>
       </section>
 
-      <section>
+      <section class="addresses">
         <div class="address_list">
         <AddressEntry
           :for.with_index={{a, index} <- @addresses}
@@ -61,6 +65,17 @@ defmodule StudentListWeb.PageLive do
             can_delete={length(@addresses) > 1} />
         </div>
         <button type="button" class="button is-info is-small" :on-click="add_address">Add Another Household</button>
+      </section>
+
+      <section class="notes">
+        <Form for={:notes} change="update_notes" >
+          <Field name="note">
+            <Label>Notes</Label>
+            <div class="control">
+              <TextInput value={@notes} id={"notes-input"} />
+            </div>
+          </Field>
+        </Form>
       </section>
 
       <button type="button" class="button is-info is-large" :on-click="submit_form" disabled={!valid_data?(assigns)} >Submit</button>
@@ -83,9 +98,17 @@ defmodule StudentListWeb.PageLive do
   end
 
   @impl true
+  def handle_event("update_notes", %{"notes" => %{"note" => note}}, socket) do
+    socket = assign(socket, notes: note)
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_event("submit_form", _value, socket) do
+    students_notes = Enum.map(socket.assigns.students, &(Map.put(&1, "notes", socket.assigns.notes)))
+
     multi = Multi.new()
-    multi = Enum.reduce(Enum.with_index(socket.assigns.students),
+    multi = Enum.reduce(Enum.with_index(students_notes),
                                         multi,
                                         fn ({x, idx}, acc) -> Student.creation_transaction(acc, idx, x) end)
     multi = Enum.reduce(Enum.with_index(socket.assigns.addresses),

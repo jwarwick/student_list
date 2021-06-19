@@ -28,11 +28,11 @@
           </div>
           <nav class="torch-nav">
             <!-- nav links here -->
-            <a href="/buses">Buses</a>
-            <a href="/classes">Classes</a>
-            <a href="/addresses">Addresses</a>
             <a href="/students">Students</a>
             <a href="/adults">Adults</a>
+            <a href="/addresses">Addresses</a>
+            <a href="/buses">Buses</a>
+            <a href="/classes">Classes</a>
             <a href="/members">Users</a>
           </nav>
         </div>

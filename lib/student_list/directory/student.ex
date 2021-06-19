@@ -30,7 +30,7 @@ defmodule StudentList.Directory.Student do
                  "student #{idx}",
                  %StudentList.Directory.Student{}
                  |> Repo.preload([:bus, :class])
-                 |> cast(attrs, [:first_name, :last_name])
+                 |> cast(attrs, [:first_name, :last_name, :notes])
                  |> put_assoc(:bus, bus)
                  |> put_assoc(:class, class)
                  |> validate_required([:first_name]))

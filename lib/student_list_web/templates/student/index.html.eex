@@ -27,9 +27,6 @@
             <%= filter_string_input(:student, :notes, @conn.params) %>
           </div>
         
-        
-        
-        
         <button type="submit" class="torch-button">Search</button>
         <%= link "Clear Filters", to: Routes.student_path(@conn, :index) %>
       <% end %>
@@ -50,8 +47,6 @@
 
               <th><%= table_link(@conn, "Bus", :bus_id) %></th>
             
-              <th><%= table_link(@conn, "Notes", :notes) %></th>
-            
             <th><span>Actions</span></th>
           </tr>
         </thead>
@@ -66,8 +61,6 @@
                 <td><%= if student.class, do: student.class.name, else: "Not Set" %></td>
 
                 <td><%= if student.bus, do: student.bus.name, else: "Not Set" %></td>
-              
-                <td><%= student.notes %></td>
               
               <td class="torch-actions">
                 <span><%= link "Show", to: Routes.student_path(@conn, :show, student) %></span>
