@@ -42,6 +42,13 @@
           <div class="torch-show-data"><%= @address.phone %></div>
         </li>
       
+        <%= for student <- @address.students do %>
+          <li>
+            <div class="torch-show-label">Student:</div>
+            <span class="torch-show-data"><%= link student.first_name, to: Routes.student_path(@conn, :show, student) %></span>
+          </li>
+        <% end %>
+
         <%= for adult <- @address.adults do %>
           <li>
             <div class="torch-show-label">Adult:</div>

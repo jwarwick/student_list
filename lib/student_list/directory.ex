@@ -437,7 +437,7 @@ defmodule StudentList.Directory do
   ** (Ecto.NoResultsError)
 
   """
-  def get_address!(id), do: Repo.get!(Address, id) |> Repo.preload([:adults])
+  def get_address!(id), do: Repo.get!(Address, id) |> Repo.preload([:adults, :students])
 
   @doc """
   Creates a address.
@@ -580,7 +580,7 @@ defmodule StudentList.Directory do
   ** (Ecto.NoResultsError)
 
   """
-  def get_student!(id), do: Repo.get!(Student, id) |> Repo.preload([:bus, :class])
+  def get_student!(id), do: Repo.get!(Student, id) |> Repo.preload([:bus, :class, :addresses])
 
   @doc """
   Creates a student.

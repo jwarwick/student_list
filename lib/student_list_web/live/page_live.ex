@@ -8,7 +8,7 @@ defmodule StudentListWeb.PageLive do
 
   alias StudentList.Repo
   alias StudentList.Directory
-  alias StudentList.Directory.{Address, Student}
+  alias StudentList.Directory.{Address, Student, StudentAddress}
 
   alias StudentListWeb.Live.{Heading, StudentEntry, AddressEntry}
 
@@ -107,14 +107,22 @@ defmodule StudentListWeb.PageLive do
   def handle_event("submit_form", _value, socket) do
     students_notes = Enum.map(socket.assigns.students, &(Map.put(&1, "notes", socket.assigns.notes)))
 
-    multi = Multi.new()
-    multi = Enum.reduce(Enum.with_index(students_notes),
-                                        multi,
-                                        fn ({x, idx}, acc) -> Student.creation_transaction(acc, idx, x) end)
-    multi = Enum.reduce(Enum.with_index(socket.assigns.addresses),
-                                        multi,
-                                        fn ({x, idx}, acc) -> Address.creation_transaction(acc, idx, x) end)
-    _result = Repo.transaction(multi)
+    {:ok, students} = Enum.reduce(Enum.with_index(students_notes),
+                                                  Multi.new(),
+                                                  fn ({x, idx}, acc) -> Student.creation_transaction(acc, idx, x) end)
+                                                  |> Repo.transaction()
+
+    {:ok, addresses}  = Enum.reduce(Enum.with_index(socket.assigns.addresses),
+                                                    Multi.new(),
+                                                    fn ({x, idx}, acc) -> Address.creation_transaction(acc, idx, x) end)
+                                                    |> Repo.transaction()
+
+    students = Enum.map(Map.values(students), &(&1.id))
+    addresses = Enum.map(Map.values(addresses), &(&1.id))
+
+    {:ok, _cross} = Multi.new()
+                   |>StudentAddress.creation_transaction(students, addresses)
+                   |> Repo.transaction()
 
     socket = assign(socket, submitted: true)
     {:noreply, socket}

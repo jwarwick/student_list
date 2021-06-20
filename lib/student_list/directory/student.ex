@@ -2,7 +2,7 @@ defmodule StudentList.Directory.Student do
   use Ecto.Schema
   import Ecto.Changeset
   alias Ecto.Multi
-  alias StudentList.Directory.{Bus, Class}
+  alias StudentList.Directory.{Bus, Class, Address}
   alias StudentList.Repo
 
   schema "students" do
@@ -11,6 +11,7 @@ defmodule StudentList.Directory.Student do
     field :notes, :string
     belongs_to :bus, Bus
     belongs_to :class, Class
+    many_to_many :addresses, Address, join_through: "students_addresses"
 
     timestamps()
   end

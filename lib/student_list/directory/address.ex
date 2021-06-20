@@ -2,7 +2,7 @@ defmodule StudentList.Directory.Address do
   use Ecto.Schema
   import Ecto.Changeset
   alias Ecto.Multi
-  alias StudentList.Directory.Adult
+  alias StudentList.Directory.{Adult, Student}
 
   schema "addresses" do
     field :address1, :string
@@ -12,6 +12,7 @@ defmodule StudentList.Directory.Address do
     field :state, :string
     field :zip, :string
     has_many :adults, Adult
+    many_to_many :students, Student, join_through: "students_addresses"
 
     timestamps()
   end

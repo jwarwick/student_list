@@ -36,6 +36,13 @@
           <% end %>
         </li>
 
+        <%= for address <- @student.addresses do %>
+          <li>
+            <div class="torch-show-label">Addresses:</div>
+            <span class="torch-show-data"><%= link address.address1, to: Routes.address_path(@conn, :show, address) %></span>
+          </li>
+        <% end %>
+
         <li>
           <div class="torch-show-label">Notes:</div>
           <div class="torch-show-data"><%= @student.notes %></div>
