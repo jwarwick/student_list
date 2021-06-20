@@ -420,7 +420,7 @@ defmodule StudentList.Directory do
 
   """
   def list_addresses do
-    Repo.all(Address) |> Repo.preload([:adults])
+    Repo.all(Address) |> Repo.preload([:adults, :students])
   end
 
   @doc """
@@ -563,7 +563,7 @@ defmodule StudentList.Directory do
 
   """
   def list_students do
-    Repo.all(Student) |> Repo.preload([:bus, :class])
+    Repo.all(Student) |> Repo.preload([:bus, :class, :addresses])
   end
 
   @doc """
