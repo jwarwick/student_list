@@ -1,5 +1,4 @@
 /* This file is for your main application CSS. */
-@import "./phoenix.css";
 
 /* LiveView specific classes for your customizations */
 .phx-no-feedback.invalid-feedback,
@@ -88,3 +87,16 @@
   display: block;
   margin: -1rem 0 2rem;
 }
+
+@import "../node_modules/bulma/sass/utilities/initial-variables";
+@import "../node_modules/bulma/sass/utilities/functions";
+
+$card-header-background-color: $grey-light;
+$card-footer-background-color: $grey-lighter;
+
+@import "../node_modules/bulma/bulma.sass";
+
+.card-remove-button {
+  justify-content: flex-end;
+}
+

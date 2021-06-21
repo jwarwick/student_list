@@ -41,44 +41,46 @@ defmodule StudentListWeb.PageLive do
     <div :if={!@submitted}>
       <Heading />
 
-      <section class="students">
-        <div class="student_list">
-        <StudentEntry
-          :for.with_index={{s, index} <- @students}
-            id={"student-#{index}"}
-            student={s}
-            index={index}
-            sorted_buses={@sorted_buses}
-            sorted_classrooms={@sorted_classrooms}
-            can_delete={length(@students) > 1} />
+      <div class="mb-6 mt-4">
+        <div class="container">
+          <StudentEntry
+            :for.with_index={{s, index} <- @students}
+              id={"student-#{index}"}
+              student={s}
+              index={index}
+              sorted_buses={@sorted_buses}
+              sorted_classrooms={@sorted_classrooms}
+              can_delete={length(@students) > 1} />
+          <button type="button" class="button is-info" :on-click="add_student">Add Another Student</button>
         </div>
-        <button type="button" class="button is-info is-small" :on-click="add_student">Add Another Student</button>
-      </section>
+      </div>
 
-      <section class="addresses">
-        <div class="address_list">
-        <AddressEntry
-          :for.with_index={{a, index} <- @addresses}
-            id={"address-#{index}"}
-            address={a}
-            index={index}
-            can_delete={length(@addresses) > 1} />
+      <div class="mb-6">
+        <div class="container">
+          <AddressEntry
+            :for.with_index={{a, index} <- @addresses}
+              id={"address-#{index}"}
+              address={a}
+              index={index}
+              can_delete={length(@addresses) > 1} />
+          <button type="button" class="button is-info" :on-click="add_address">Add Another Household</button>
         </div>
-        <button type="button" class="button is-info is-small" :on-click="add_address">Add Another Household</button>
-      </section>
+      </div>
 
-      <section class="notes">
-        <Form for={:notes} change="update_notes" >
-          <Field name="note">
-            <Label>Notes</Label>
-            <div class="control">
-              <TextArea rows={"4"} value={@notes} id={"notes-input"} opts={placeholder: "Anything you want the fine folks compiling the directory to know. Tell us if you are on the PTO, a classroom representative, on the School Committee, on the School Council, or on the Safety Committee."} />
-            </div>
-          </Field>
-        </Form>
-      </section>
+        <div class="container mb-4">
+          <Form for={:notes} change="update_notes" >
+            <Field class="field" name="note">
+              <Label class="label">Notes</Label>
+              <div class="control">
+                <TextArea class="input" rows={"4"} value={@notes} id={"notes-input"} opts={placeholder: "Tell us if you are on the PTO, a classroom representative, on the School Committee, on the School Council, or on the Safety Committee."} />
+              </div>
+            </Field>
+          </Form>
+        </div>
 
-      <button type="button" class="button is-info is-large" :on-click="submit_form" disabled={!valid_data?(assigns)} >Submit</button>
+      <div class="container">
+        <button type="button" class="button is-primary is-large" :on-click="submit_form" disabled={!valid_data?(assigns)} >Submit</button>
+      </div>
     </div>
     """
   end

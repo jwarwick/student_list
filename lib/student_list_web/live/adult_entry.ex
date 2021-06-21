@@ -12,39 +12,53 @@ defmodule StudentListWeb.Live.AdultEntry do
   @impl true
   def render(assigns) do
     ~F"""
-      <div>
-      <Form for={:adult} change="update_adult" >
-
-        <Field name="first_name">
-          <Label>First Name</Label>
-          <div class="control">
-            <TextInput value={Map.get(@adult, "first_name", "")} id={"#{assigns.id}-first-name"} />
+      <div class="card mb-4">
+        <div class="card-header">
+          <div class="card-header-title">
+            Adult
           </div>
-        </Field>
+        </div>
 
-        <Field name="last_name">
-          <Label>Last Name</Label>
-          <div class="control">
-            <TextInput value={Map.get(@adult, "last_name", "")} id={"#{assigns.id}-last-name"} />
-          </div>
-        </Field>
+        <div class="card-content">
+          <Form for={:adult} change="update_adult" >
 
-        <Field name="email">
-          <Label>Email</Label>
-          <div class="control">
-            <TextInput value={Map.get(@adult, "email", "")} id={"#{assigns.id}-email"} />
-          </div>
-        </Field>
+            <Field class="field" name="first_name">
+              <Label class="label">First Name</Label>
+              <div class="control">
+                <TextInput class="input" value={Map.get(@adult, "first_name", "")} id={"#{assigns.id}-first-name"} />
+              </div>
+            </Field>
 
-        <Field name="mobile_phone">
-          <Label>Mobile Phone</Label>
-          <div class="control">
-            <TextInput value={Map.get(@adult, "mobile_phone", "")} id={"#{assigns.id}-mobile-phone"} />
-          </div>
-        </Field>
-      </Form>
+            <Field class="field" name="last_name">
+              <Label class="label">Last Name</Label>
+              <div class="control">
+                <TextInput class="input" value={Map.get(@adult, "last_name", "")} id={"#{assigns.id}-last-name"} />
+              </div>
+            </Field>
 
-        <Link :if={@can_delete} label="Remove Adult" to="#" click="delete_adult" />
+            <Field class="field" name="email">
+              <Label class="label">Email</Label>
+              <div class="control">
+                <TextInput class="input" value={Map.get(@adult, "email", "")} id={"#{assigns.id}-email"} />
+              </div>
+            </Field>
+
+            <Field class="field" name="mobile_phone">
+              <Label class="label">Mobile Phone</Label>
+              <div class="control">
+                <TextInput class="input" value={Map.get(@adult, "mobile_phone", "")} id={"#{assigns.id}-mobile-phone"} />
+              </div>
+            </Field>
+          </Form>
+        </div>
+
+        <div>
+          <footer class="card-footer" :if={@can_delete}>
+            <div class="card-footer-item card-remove-button">
+              <button type="button" class="button is-small is-danger is-light" :on-click="delete_adult">Remove Adult</button>
+              </div>
+          </footer>
+        </div>
       </div>
     """
   end

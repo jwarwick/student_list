@@ -13,66 +13,83 @@ defmodule StudentListWeb.Live.AddressEntry do
   @impl true
   def render(assigns) do
     ~F"""
-      <div>
 
-       <section class="adults">
-        <AdultEntry
-          :for.with_index={{a, adult_index} <- @address["adults"]}
-            id={"adult-#{@index}-#{adult_index}"}
-            adult={a}
-            index={adult_index}
-            address_index={@index}
-            can_delete={length(@address["adults"]) > 1} />
-    
-        <button type="button" class="button is-info is-small" :on-click="add_adult">Add Another Adult</button>
-       </section>
+      <div class="card mb-4">
+        <div class="card-header">
+          <div class="card-header-title">
+            Household
+          </div>
+        </div>
+        <div class="card-content">
+         <div class="adults mb-6">
+          <div class="container">
+            <div class="mb-4">
+              <AdultEntry
+                :for.with_index={{a, adult_index} <- @address["adults"]}
+                  id={"adult-#{@index}-#{adult_index}"}
+                  adult={a}
+                  index={adult_index}
+                  address_index={@index}
+                  can_delete={length(@address["adults"]) > 1} />
+             </div>
+        
+            <button type="button" class="button is-info" :on-click="add_adult">Add Another Adult</button>
+          </div>
+         </div>
 
       <Form for={:address} change="update_address" >
-        <Field name="address1">
-          <Label>Address 1</Label>
+        <Field class="field" name="address1">
+          <Label class="label">Address 1</Label>
           <div class="control">
-            <TextInput value={Map.get(@address, "address1", "")} id={"#{assigns.id}-address-1"} />
+            <TextInput class="input" value={Map.get(@address, "address1", "")} id={"#{assigns.id}-address-1"} />
           </div>
         </Field>
 
-        <Field name="address2">
-          <Label>Address 2</Label>
+        <Field class="field" name="address2">
+          <Label class="label">Address 2</Label>
           <div class="control">
-            <TextInput value={Map.get(@address, "address2", "")} id={"#{assigns.id}-address-2"} />
+            <TextInput class="input" value={Map.get(@address, "address2", "")} id={"#{assigns.id}-address-2"} />
           </div>
         </Field>
 
-        <Field name="city">
-          <Label>City</Label>
+        <Field class="field" name="city">
+          <Label class="label">City</Label>
           <div class="control">
-            <TextInput value={Map.get(@address, "city", "")} id={"#{assigns.id}-city"} />
+            <TextInput class="input" value={Map.get(@address, "city", "")} id={"#{assigns.id}-city"} />
           </div>
         </Field>
 
-        <Field name="state">
-          <Label>State</Label>
+        <Field class="field" name="state">
+          <Label class="label">State</Label>
           <div class="control">
-            <TextInput value={Map.get(@address, "state", "")} id={"#{assigns.id}-state"} />
+            <TextInput class="input" value={Map.get(@address, "state", "")} id={"#{assigns.id}-state"} />
           </div>
         </Field>
 
-        <Field name="zip">
-          <Label>Zip</Label>
+        <Field class="field" name="zip">
+          <Label class="label">Zip</Label>
           <div class="control">
-            <TextInput value={Map.get(@address, "zip", "")} id={"#{assigns.id}-zip"} />
+            <TextInput class="input" value={Map.get(@address, "zip", "")} id={"#{assigns.id}-zip"} />
           </div>
         </Field>
 
-        <Field name="phone">
-          <Label>Home Phone</Label>
+        <Field class="field" name="phone">
+          <Label class="label">Home Phone</Label>
           <div class="control">
-            <TextInput value={Map.get(@address, "phone", "")} id={"#{assigns.id}-phone"} />
+            <TextInput class="input" value={Map.get(@address, "phone", "")} id={"#{assigns.id}-phone"} />
           </div>
         </Field>
 
         </Form>
+        </div>
 
-        <Link :if={@can_delete} label="Remove Household" to="#" click="delete_address" />
+        <div>
+          <footer class="card-footer" :if={@can_delete}>
+            <div class="card-footer-item card-remove-button">
+              <button type="button" class="button is-small is-danger is-light" :on-click="delete_address">Remove Household</button>
+              </div>
+          </footer>
+        </div>
       </div>
     """
   end
