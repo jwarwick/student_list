@@ -1,7 +1,7 @@
 defmodule StudentListWeb.Live.AddressEntry do
   use Surface.LiveComponent
 
-  alias Surface.Components.{Form, Link}
+  alias Surface.Components.Form
   alias Surface.Components.Form.{Field, Label, TextInput}
 
   alias StudentListWeb.Live.AdultEntry
@@ -15,7 +15,7 @@ defmodule StudentListWeb.Live.AddressEntry do
     ~F"""
 
       <div class="card mb-4">
-        <div class="card-header">
+        <div class="card-header address-card-header">
           <div class="card-header-title">
             Household
           </div>

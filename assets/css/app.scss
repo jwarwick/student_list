@@ -91,10 +91,28 @@
 @import "../node_modules/bulma/sass/utilities/initial-variables";
 @import "../node_modules/bulma/sass/utilities/functions";
 
-$card-header-background-color: $grey-light;
-$card-footer-background-color: $grey-lighter;
+$primary: #026670;
+$info: #9FEDD7;
+$body-background-color: #F7F9FB;
+$card-footer-background-color: #EDEAE5;
+
+$student-card-header-background-color: #FCE181;
+$adult-card-header-background-color: #FEF9C7;
+$address-card-header-background-color: $student-card-header-background-color;
 
 @import "../node_modules/bulma/bulma.sass";
+
+.student-card-header {
+  background-color: $student-card-header-background-color;
+}
+
+.adult-card-header {
+  background-color: $adult-card-header-background-color;
+}
+
+.address-card-header {
+  background-color: $address-card-header-background-color;
+}
 
 .card-remove-button {
   justify-content: flex-end;

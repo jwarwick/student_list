@@ -1,7 +1,7 @@
 defmodule StudentListWeb.Live.AdultEntry do
   use Surface.LiveComponent
 
-  alias Surface.Components.{Form, Link}
+  alias Surface.Components.Form
   alias Surface.Components.Form.{Field, Label, TextInput}
 
   prop can_delete, :boolean, default: true
@@ -13,7 +13,7 @@ defmodule StudentListWeb.Live.AdultEntry do
   def render(assigns) do
     ~F"""
       <div class="card mb-4">
-        <div class="card-header">
+        <div class="card-header adult-card-header">
           <div class="card-header-title">
             Adult
           </div>
