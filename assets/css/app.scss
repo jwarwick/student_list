@@ -91,13 +91,24 @@
 @import "../node_modules/bulma/sass/utilities/initial-variables";
 @import "../node_modules/bulma/sass/utilities/functions";
 
-$primary: #026670;
-$info: #9FEDD7;
+// Lively Yet Soothing
+// $primary: #026670;
+// $info: #9FEDD7;
+// $body-background-color: #F7F9FB;
+// $card-footer-background-color: #EDEAE5;
+// 
+// $student-card-header-background-color: #FCE181;
+// $adult-card-header-background-color: #FEF9C7;
+// $address-card-header-background-color: $student-card-header-background-color;
+
+// Close to Nature
+$primary: #687864;
+$info: #31708E;
 $body-background-color: #F7F9FB;
 $card-footer-background-color: #EDEAE5;
 
-$student-card-header-background-color: #FCE181;
-$adult-card-header-background-color: #FEF9C7;
+$student-card-header-background-color: #5085A5;
+$adult-card-header-background-color: #8FC1E3;
 $address-card-header-background-color: $student-card-header-background-color;
 
 @import "../node_modules/bulma/bulma.sass";
