@@ -7,7 +7,7 @@ defmodule StudentList.Repo.Migrations.CreateAdults do
       add :last_name, :string
       add :email, :string
       add :mobile_phone, :string
-      add :address_id, references(:addresses, on_delete: :nothing)
+      add :address_id, references(:addresses, on_delete: :delete_all)
 
       timestamps()
     end

@@ -87,4 +87,18 @@ defmodule StudentList.DirectoryFixtures do
 
     adult
   end
+
+  @doc """
+  Generate a entry.
+  """
+  def entry_fixture(attrs \\ %{}) do
+    {:ok, entry} =
+      attrs
+      |> Enum.into(%{
+        content: "some content"
+      })
+      |> StudentList.Directory.create_entry()
+
+    entry
+  end
 end

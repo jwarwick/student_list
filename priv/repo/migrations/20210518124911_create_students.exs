@@ -6,8 +6,8 @@ defmodule StudentList.Repo.Migrations.CreateStudents do
       add :first_name, :string
       add :last_name, :string
       add :notes, :string
-      add :bus_id, references(:buses, on_delete: :nothing)
-      add :class_id, references(:classes, on_delete: :nothing)
+      add :bus_id, references(:buses, on_delete: :nilify_all)
+      add :class_id, references(:classes, on_delete: :nilify_all)
 
       timestamps()
     end

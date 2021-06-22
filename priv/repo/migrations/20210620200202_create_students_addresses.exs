@@ -3,8 +3,8 @@ defmodule StudentList.Repo.Migrations.CreateStudentsAddresses do
 
   def change do
     create table(:students_addresses, primary_key: false) do
-      add :student_id, references(:students, on_delete: :nothing), primary_key: true
-      add :address_id, references(:addresses, on_delete: :nothing), primary_key: true
+      add :student_id, references(:students, on_delete: :delete_all), primary_key: true
+      add :address_id, references(:addresses, on_delete: :delete_all), primary_key: true
     end
 
     create index(:students_addresses, [:student_id])

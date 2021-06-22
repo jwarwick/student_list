@@ -14,6 +14,7 @@ defmodule StudentList.Directory do
   alias StudentList.Directory.Address
   alias StudentList.Directory.Student
   alias StudentList.Directory.Adult
+  alias StudentList.Directory.Entry
 
   @pagination [page_size: 15]
   @pagination_distance 5
@@ -211,6 +212,7 @@ defmodule StudentList.Directory do
       text :notes
     end
   end
+
   defp filter_config(:adults) do
     defconfig do
       text :first_name
@@ -221,6 +223,12 @@ defmodule StudentList.Directory do
     end
   end
 
+  defp filter_config(:entries) do
+    defconfig do
+      text :content
+
+    end
+  end
 
   @doc """
   Paginate the list of classes using filtrex
@@ -790,5 +798,147 @@ defmodule StudentList.Directory do
   def change_adult(%Adult{} = adult, attrs \\ %{}) do
     Adult.changeset(adult, attrs)
   end
+
+
+
+@doc """
+Paginate the list of entries using filtrex
+filters.
+
+## Examples
+
+    iex> list_entries(%{})
+    %{entries: [%Entry{}], ...}
+"""
+@spec paginate_entries(map) :: {:ok, map} | {:error, any}
+def paginate_entries(params \\ %{}) do
+  params =
+    params
+    |> Map.put_new("sort_direction", "desc")
+    |> Map.put_new("sort_field", "inserted_at")
+
+  {:ok, sort_direction} = Map.fetch(params, "sort_direction")
+  {:ok, sort_field} = Map.fetch(params, "sort_field")
+
+  with {:ok, filter} <- Filtrex.parse_params(filter_config(:entries), params["entry"] || %{}),
+       %Scrivener.Page{} = page <- do_paginate_entries(filter, params) do
+    {:ok,
+      %{
+        entries: page.entries,
+        page_number: page.page_number,
+        page_size: page.page_size,
+        total_pages: page.total_pages,
+        total_entries: page.total_entries,
+        distance: @pagination_distance,
+        sort_field: sort_field,
+        sort_direction: sort_direction
+      }
+    }
+  else
+    {:error, error} -> {:error, error}
+    error -> {:error, error}
+  end
+end
+
+defp do_paginate_entries(filter, params) do
+  Entry
+  |> Filtrex.query(filter)
+  |> order_by(^sort(params))
+  |> paginate(Repo, params, @pagination)
+end
+
+@doc """
+Returns the list of entries.
+
+## Examples
+
+    iex> list_entries()
+    [%Entry{}, ...]
+
+"""
+def list_entries do
+  Repo.all(Entry) |> Repo.preload([:students, :addresses])
+end
+
+@doc """
+Gets a single entry.
+
+Raises `Ecto.NoResultsError` if the Entry does not exist.
+
+## Examples
+
+    iex> get_entry!(123)
+    %Entry{}
+
+    iex> get_entry!(456)
+    ** (Ecto.NoResultsError)
+
+"""
+def get_entry!(id), do: Repo.get!(Entry, id) |> Repo.preload([:students, :addresses])
+
+@doc """
+Creates a entry.
+
+## Examples
+
+    iex> create_entry(%{field: value})
+    {:ok, %Entry{}}
+
+    iex> create_entry(%{field: bad_value})
+    {:error, %Ecto.Changeset{}}
+
+"""
+def create_entry(attrs \\ %{}) do
+  %Entry{}
+  |> Entry.changeset(attrs)
+  |> Repo.insert()
+end
+
+@doc """
+Updates a entry.
+
+## Examples
+
+    iex> update_entry(entry, %{field: new_value})
+    {:ok, %Entry{}}
+
+    iex> update_entry(entry, %{field: bad_value})
+    {:error, %Ecto.Changeset{}}
+
+"""
+def update_entry(%Entry{} = entry, attrs) do
+  entry
+  |> Entry.changeset(attrs)
+  |> Repo.update()
+end
+
+@doc """
+Deletes a Entry.
+
+## Examples
+
+    iex> delete_entry(entry)
+    {:ok, %Entry{}}
+
+    iex> delete_entry(entry)
+    {:error, %Ecto.Changeset{}}
+
+"""
+def delete_entry(%Entry{} = entry) do
+  Repo.delete(entry)
+end
+
+@doc """
+Returns an `%Ecto.Changeset{}` for tracking entry changes.
+
+## Examples
+
+    iex> change_entry(entry)
+    %Ecto.Changeset{source: %Entry{}}
+
+"""
+def change_entry(%Entry{} = entry, attrs \\ %{}) do
+  Entry.changeset(entry, attrs)
+end
 
 end

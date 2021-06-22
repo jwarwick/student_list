@@ -8,7 +8,7 @@ defmodule StudentListWeb.PageLive do
 
   alias StudentList.Repo
   alias StudentList.Directory
-  alias StudentList.Directory.{Address, Student, StudentAddress}
+  alias StudentList.Directory.{Address, Student, StudentAddress, Entry}
 
   alias StudentListWeb.Live.{Heading, StudentEntry, AddressEntry}
 
@@ -125,6 +125,10 @@ defmodule StudentListWeb.PageLive do
     {:ok, _cross} = Multi.new()
                    |>StudentAddress.creation_transaction(students, addresses)
                    |> Repo.transaction()
+
+    {:ok, _entries} = Multi.new()
+                      |> Entry.creation_transaction(socket.assigns, students, addresses)
+                      |> Repo.transaction()
 
     socket = assign(socket, submitted: true)
     {:noreply, socket}

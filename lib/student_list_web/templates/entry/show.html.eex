@@ -1,0 +1,35 @@
+<section id="torch-toolbar">
+  <div class="torch-container">
+    <%= link "Edit", to: Routes.entry_path(@conn, :edit, @entry), class: "torch-button" %>
+    <%= link "Back", to: Routes.entry_path(@conn, :index), class: "torch-button" %>
+  </div>
+</section>
+
+<section id="torch-header-and-content">
+  <div class="torch-container">
+    <div class="header">
+      <h3>Entry Details</h3>
+    </div>
+    <ul>
+      
+        <li>
+          <div class="torch-show-label">Content:</div>
+          <div class="torch-show-data"><%= @entry.content %></div>
+        </li>
+      
+        <%= for student <- @entry.students do %>
+          <li>
+            <div class="torch-show-label">Student:</div>
+            <span class="torch-show-data"><%= link student.first_name, to: Routes.student_path(@conn, :show, student) %></span>
+          </li>
+        <% end %>
+
+        <%= for address <- @entry.addresses do %>
+          <li>
+            <div class="torch-show-label">Address:</div>
+            <span class="torch-show-data"><%= link address.address1, to: Routes.address_path(@conn, :show, address) %></span>
+          </li>
+        <% end %>
+    </ul>
+  </div>
+</section>

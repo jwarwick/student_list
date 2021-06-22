@@ -426,4 +426,81 @@ defmodule StudentList.DirectoryTest do
       assert %Ecto.Changeset{} = Directory.change_adult(adult)
     end
   end
+
+  describe "entries" do
+    alias StudentList.Directory.Entry
+
+    @valid_attrs %{content: "some content"}
+    @update_attrs %{content: "some updated content"}
+    @invalid_attrs %{content: nil}
+
+    def entry_fixture(attrs \\ %{}) do
+      {:ok, entry} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Directory.create_entry()
+
+      entry |> Repo.preload([:students, :addresses])
+    end
+
+    test "paginate_entries/1 returns paginated list of entries" do
+      for _ <- 1..20 do
+        entry_fixture()
+      end
+
+      {:ok, %{entries: entries} = page} = Directory.paginate_entries(%{})
+
+      assert length(entries) == 15
+      assert page.page_number == 1
+      assert page.page_size == 15
+      assert page.total_pages == 2
+      assert page.total_entries == 20
+      assert page.distance == 5
+      assert page.sort_field == "inserted_at"
+      assert page.sort_direction == "desc"
+    end
+
+    test "list_entries/0 returns all entries" do
+      entry = entry_fixture()
+      assert Directory.list_entries() == [entry]
+    end
+
+    test "get_entry!/1 returns the entry with given id" do
+      entry = entry_fixture()
+      assert Directory.get_entry!(entry.id) == entry
+    end
+
+    test "create_entry/1 with valid data creates a entry" do
+      assert {:ok, %Entry{} = entry} = Directory.create_entry(@valid_attrs)
+      assert entry.content == "some content"
+    end
+
+    test "create_entry/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Directory.create_entry(@invalid_attrs)
+    end
+
+    test "update_entry/2 with valid data updates the entry" do
+      entry = entry_fixture()
+      assert {:ok, entry} = Directory.update_entry(entry, @update_attrs)
+      assert %Entry{} = entry
+      assert entry.content == "some updated content"
+    end
+
+    test "update_entry/2 with invalid data returns error changeset" do
+      entry = entry_fixture()
+      assert {:error, %Ecto.Changeset{}} = Directory.update_entry(entry, @invalid_attrs)
+      assert entry == Directory.get_entry!(entry.id)
+    end
+
+    test "delete_entry/1 deletes the entry" do
+      entry = entry_fixture()
+      assert {:ok, %Entry{}} = Directory.delete_entry(entry)
+      assert_raise Ecto.NoResultsError, fn -> Directory.get_entry!(entry.id) end
+    end
+
+    test "change_entry/1 returns a entry changeset" do
+      entry = entry_fixture()
+      assert %Ecto.Changeset{} = Directory.change_entry(entry)
+    end
+  end
 end
