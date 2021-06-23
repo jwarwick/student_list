@@ -10,7 +10,7 @@ defmodule StudentListWeb.PageLive do
   alias StudentList.Directory
   alias StudentList.Directory.{Address, Student, StudentAddress, Entry}
 
-  alias StudentListWeb.Live.{Heading, StudentEntry, AddressEntry}
+  alias StudentListWeb.Live.{Heading, StudentEntry, AddressEntry, Confirmation}
 
   data submitted, :boolean, default: false
   data students, :list, default: [%{}]
@@ -36,7 +36,7 @@ defmodule StudentListWeb.PageLive do
   def render(assigns) do
     ~F"""
     <div :if={@submitted}>
-     <h1>Thanks for entering your info!</h1>
+     <Confirmation />
     </div>
     <div :if={!@submitted}>
       <Heading />
