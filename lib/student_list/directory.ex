@@ -285,7 +285,7 @@ defmodule StudentList.Directory do
 
   """
   def list_classes do
-    Repo.all(Class)
+    Repo.all(from c in Class, order_by: c.display_order)
   end
 
   @doc """

@@ -4,6 +4,21 @@ defmodule StudentList.Directory.Listing do
   """
 
   @doc """
+  Verifies that a string is not nil or composed just of whitespace
+  """
+  def not_empty(nil), do: false
+  def not_empty(str) do
+    length = str |> String.trim |> String.length
+    0 != length
+  end
+
+  @doc """
+  Pluralize a string
+  """
+  def pluralize(1, singular, _plural), do: "1 #{singular}"
+  def pluralize(count, _singular, plural), do: "#{count} #{plural}"
+
+  @doc """
   Format a name, handling `nil`
   """
   def format_name(nil), do: ""

@@ -1,6 +1,8 @@
 defmodule StudentList.Directory.Class do
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query
+
   alias StudentList.Directory.Student
 
   schema "classes" do

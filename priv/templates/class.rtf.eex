@@ -1,0 +1,12 @@
+\pgndec\pard\plain \s22\b\langfe255\afs56\lang255\ab\loch\f3\fs56\lang255{\rtlch \ltrch\loch
+<%= @class.name %>}
+\par \pard\plain \s23\langfe255\afs22\lang255\loch\f3\fs22\lang255{\rtlch \ltrch\loch
+<%= @class.teacher %>}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\aspalpha\ltrpar\langfe255\lang255\cf0\kerning1\hich\af4\dbch\af6\afs24\lang255\loch\f0\fs24{\afs21\rtlch \ltrch\loch\fs21\loch\f3
+}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\aspalpha\ltrpar\langfe255\lang255\cf0\kerning1\hich\af4\dbch\af6\afs24\lang255\loch\f0\fs24{\afs21\rtlch \ltrch\loch\fs21\loch\f3
+}
+
+<%= for s <- @class.students do %>
+<%= student(student: s) %>
+<% end %>

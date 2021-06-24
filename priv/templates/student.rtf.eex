@@ -1,0 +1,51 @@
+\par \pard\plain \s24\b\langfe255\afs30\lang255\ab\loch\f3\fs30\lang255{\rtlch \ltrch\loch
+<% alias StudentList.Directory.Listing %>
+<%= Listing.format_name(@student.first_name) %> <%= Listing.format_name(@student.last_name) %>}
+<%= if @student.bus.should_display do %>
+\par \pard\plain \s25\langfe255\afs22\lang255\loch\f3\fs22\lang255{\rtlch \ltrch\loch
+<%= @student.bus.name %>}
+<% end %>
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\aspalpha\ltrpar\langfe255\lang255\cf0\kerning1\hich\af4\dbch\af6\afs24\lang255\loch\f0\fs24{\afs21\rtlch \ltrch\loch\fs21\loch\f3
+}
+<%= for address <- @student.addresses do %>
+<%= for parent <- address.adults do %>
+\par \pard\plain \s26\b\langfe255\afs22\lang255\ab\loch\f3\fs22\lang255{\rtlch \ltrch\loch
+<%= Listing.format_name(parent.first_name) %> <%= Listing.format_name(parent.last_name) %>}
+<%= if Listing.not_empty(parent.email) do %>
+\par \pard\plain \s27\li58\ri0\lin58\rin0\fi0\langfe255\afs22\lang255\loch\f3\fs22\lang255{\rtlch \ltrch\loch
+<%= String.trim(parent.email) %>}
+<% end %>
+<%= if Listing.not_empty(parent.mobile_phone) do %>
+\par \pard\plain \s27\li58\ri0\lin58\rin0\fi0\langfe255\afs22\lang255\loch\f3\fs22\lang255{\rtlch \ltrch\loch
+Cell: <%= Listing.format_phone(parent.mobile_phone) %>}
+<% end %>
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\aspalpha\ltrpar\langfe255\lang255\cf0\kerning1\hich\af4\dbch\af6\afs24\lang255\loch\f0\fs24{\afs21\rtlch \ltrch\loch\fs21\loch\f3
+}
+<% end %>
+
+
+<%= if Listing.not_empty(address.address1) do %>
+\par \pard\plain \s28\langfe255\afs22\lang255\loch\f3\fs22\lang255{\rtlch \ltrch\loch
+<%= String.trim(address.address1) %>}
+<% end %>
+<%= if Listing.not_empty(address.address2) do %>
+\par \pard\plain \s28\langfe255\afs22\lang255\loch\f3\fs22\lang255{\rtlch \ltrch\loch
+<%= String.trim(address.address2) %>}
+<% end %>
+\par \pard\plain \s28\langfe255\afs22\lang255\loch\f3\fs22\lang255{\rtlch \ltrch\loch
+<%= Listing.format_city_address(address.city, address.state, address.zip) %>}
+<%= if Listing.not_empty(address.phone) do %>
+\par \pard\plain \s28\langfe255\afs22\lang255\loch\f3\fs22\lang255{\rtlch \ltrch\loch
+Home Phone: <%= Listing.format_phone(address.phone) %>}
+<% end %>
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\aspalpha\ltrpar\langfe255\lang255\cf0\kerning1\hich\af4\dbch\af6\afs24\lang255\loch\f0\fs24{\afs22\rtlch \ltrch\loch\fs22\loch\f3
+}
+
+<% end %>
+
+<%= if Listing.not_empty(@student.notes) do %>
+\par \pard\plain \s29\cf3\i\langfe255\afs22\lang255\ai\loch\f3\fs22\lang255{\rtlch \ltrch\loch
+*<%= @student.notes %>}
+\par \pard\plain \s0\nowidctlpar{\*\hyphen2\hyphlead2\hyphtrail2\hyphmax0}\aspalpha\ltrpar\langfe255\lang255\cf0\kerning1\hich\af4\dbch\af6\afs24\lang255\loch\f0\fs24{\afs21\rtlch \ltrch\loch\fs21\loch\f3
+}
+<% end %>

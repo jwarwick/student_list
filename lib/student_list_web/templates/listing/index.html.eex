@@ -1,11 +1,11 @@
 <% alias StudentList.Directory.Listing %>
 <div class="directory">
   <h2>Student Directory</h2>
-  <div>INSERT DOWNLOAD LINK HERE</div>
+  <div><%= link "Download", to: Routes.listing_path(@conn, :download, %{}) %></div>
   <%= for class <- @classes do %>
     <div class="classroom">
       <div class="class_name">
-        <h2 class="class_name"><%= class.name %></h2>
+        <h2 class="class_name"><%= class.name %> (<%= Listing.pluralize(length(class.students), "Student", "Students") %>)</h2>
         <h3 class="teacher_name"><%= class.teacher %></h3>
       </div>
       <div class="students">
@@ -22,10 +22,10 @@
               <div class="parent_name">
                 <span><b><%= Listing.format_name(parent.first_name) %> <%= Listing.format_name(parent.last_name) %></b></span><br>
                 <div class="parent_contact">
-                  <%= if not_empty(parent.email) do %>
+                  <%= if Listing.not_empty(parent.email) do %>
                     <span class="email"><%= String.trim(parent.email) %></span><br>
                   <% end %>
-                  <%= if not_empty(parent.mobile_phone) do %>
+                  <%= if Listing.not_empty(parent.mobile_phone) do %>
                     <span class="phone">Cell: <%= Listing.format_phone(parent.mobile_phone) %></span><br>
                   <% end %>
                   <br>
@@ -33,22 +33,22 @@
               </div>
             <% end %>
             <div class="parent_address">
-              <%= if not_empty(address.address1) do %>
+              <%= if Listing.not_empty(address.address1) do %>
                 <span class="address_street"><%= String.trim(address.address1) %></span><br>
               <% end %>
-              <%= if not_empty(address.address2) do %>
+              <%= if Listing.not_empty(address.address2) do %>
                 <span class="address_street2"><%= String.trim(address.address2) %></span><br>
               <% end %>
-              <%= if not_empty(address.city) do %>
+              <%= if Listing.not_empty(address.city) do %>
                 <span class="address_city"><%= String.trim(address.city) %>,</span>
               <% end %>
-              <%= if not_empty(address.state) do %>
+              <%= if Listing.not_empty(address.state) do %>
                 <span class="address_state"><%= Listing.format_state(address.state) %>  </span>
               <% end %>
-              <%= if not_empty(address.zip) do %>
+              <%= if Listing.not_empty(address.zip) do %>
                 <span class="address_zip"><%= String.trim(address.zip) %></span><br>
               <% end %>
-              <%= if not_empty(address.phone) do %>
+              <%= if Listing.not_empty(address.phone) do %>
                 <span class="home_phone">Home Phone: <%= Listing.format_phone(address.phone) %></span><br>
               <% end %>
             </div>

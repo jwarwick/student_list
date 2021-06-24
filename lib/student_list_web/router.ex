@@ -76,6 +76,7 @@ defmodule StudentListWeb.Router do
     resources "/adults", AdultController
     resources "/entries", EntryController
     get "/listings", ListingController, :index
+    get "/listings/download", ListingController, :download
   end
 
   scope "/", StudentListWeb do
