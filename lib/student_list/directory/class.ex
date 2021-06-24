@@ -7,7 +7,7 @@ defmodule StudentList.Directory.Class do
     field :display_order, :integer
     field :name, :string
     field :teacher, :string
-    has_many :student, Student
+    has_many :students, Student
 
     timestamps()
   end

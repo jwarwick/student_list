@@ -3,6 +3,7 @@
     <title>Admin Dashboard</title>
     <!-- Uncomment to just use the bare bones torch styles rather than the theme -->
     <!--<link rel="stylesheet" href="<%= Routes.static_path(@conn, "/torch/base.css") %>">-->
+    <link phx-track-static rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/torch/theme.css") %>">
   </head>
 
@@ -34,6 +35,7 @@
             <a href="/buses">Buses</a>
             <a href="/classes">Classes</a>
             <a href="/entries">Entries</a>
+            <a href="/listings">Directory</a>
             <a href="/members">Users</a>
           </nav>
         </div>

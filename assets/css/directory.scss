@@ -1,0 +1,41 @@
+.directory * {
+  all: revert
+}
+
+// Hide the LiveView reload iframe
+.directory iframe {
+  display: none;
+  height: 0px;
+  width: 0px;
+}
+
+.directory {
+  margin: 20px;
+}
+
+.directory h2 {
+  padding-top: 50px;
+  padding-right: 300px;
+}
+
+.parent_contact {
+  padding-left: 2em;
+}
+
+.parent_address {
+  padding-left: 1em;
+}
+
+.student_name {
+  margin-bottom: 0px;
+}
+
+.teacher_name {
+  margin-bottom: 30px;
+}
+
+p.notes {
+  font-style: italic;
+  color: red;
+}
+

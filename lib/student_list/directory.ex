@@ -19,7 +19,6 @@ defmodule StudentList.Directory do
   @pagination [page_size: 15]
   @pagination_distance 5
 
-
   @doc """
   Get a keyword list of buses sorted by `display_order`.
   """
@@ -941,4 +940,11 @@ def change_entry(%Entry{} = entry, attrs \\ %{}) do
   Entry.changeset(entry, attrs)
 end
 
+
+  @doc """
+  Return the complete directory listing
+  """
+  def get_listing do
+    list_classes() |> Repo.preload([students: [:bus, addresses: :adults]])
+  end
 end
