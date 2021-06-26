@@ -8,6 +8,13 @@ defmodule StudentList.Accounts do
 
   alias StudentList.Accounts.{User, UserToken, UserNotifier}
 
+  @doc """
+  Are users allowed to register? Only if no other users exist
+  """
+  def can_register do
+    length(list_members()) == 0
+  end
+
   ## Database getters
 
   @doc """

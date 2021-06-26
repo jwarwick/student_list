@@ -3,6 +3,18 @@ defmodule StudentListWeb.UserRegistrationControllerTest do
 
   import StudentList.AccountsFixtures
 
+  describe "GET /users/register with existing user" do
+    setup do
+      %{user: user_fixture()}
+    end
+
+    test "doesn't render registration page", %{conn: conn} do
+      conn = get(conn, Routes.user_registration_path(conn, :new))
+      response = text_response(conn, 404)
+      assert response =~ "Not found"
+    end
+  end
+
   describe "GET /users/register" do
     test "renders registration page", %{conn: conn} do
       conn = get(conn, Routes.user_registration_path(conn, :new))
@@ -15,6 +27,26 @@ defmodule StudentListWeb.UserRegistrationControllerTest do
     test "redirects if already logged in", %{conn: conn} do
       conn = conn |> log_in_user(user_fixture()) |> get(Routes.user_registration_path(conn, :new))
       assert redirected_to(conn) == "/admin"
+    end
+  end
+
+  describe "POST /users/register with existing user" do
+    @tag :capture_log
+    setup do
+      %{user: user_fixture()}
+    end
+
+    test "doesn't create account", %{conn: conn} do
+      email = unique_user_email()
+
+      conn =
+        post(conn, Routes.user_registration_path(conn, :create), %{
+          "user" => valid_user_attributes(email: email)
+        })
+
+      response = text_response(conn, 404)
+      assert response =~ "Not found"
+      refute get_session(conn, :user_token)
     end
   end
 

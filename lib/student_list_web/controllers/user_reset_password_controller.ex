@@ -6,7 +6,7 @@ defmodule StudentListWeb.UserResetPasswordController do
   plug :get_user_by_reset_password_token when action in [:edit, :update]
 
   def new(conn, _params) do
-    render(conn, "new.html")
+    render(conn, "new.html", can_register: Accounts.can_register())
   end
 
   def create(conn, %{"user" => %{"email" => email}}) do

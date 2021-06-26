@@ -14,6 +14,10 @@ To fix, manually connect to the db as a superuser and create the extension:
 student_list_dev=# CREATE EXTENSION citext;
 ```
 
+## Account Creation
+
+When the server is started, if no users are present in the database the `Registration` page will be available at `/users/register`. This account will be an admin account and can finish the server setup.
+
 ## LICENSE
 
 Software released under the [MIT License](LICENSE.txt).

@@ -22,6 +22,8 @@
 <% end %>
 
 <p>
-  <%= link "Register", to: Routes.user_registration_path(@conn, :new) %> |
+  <%= if @can_register do %>
+    <%= link "Register", to: Routes.user_registration_path(@conn, :new) %> |
+  <% end %>
   <%= link "Forgot your password?", to: Routes.user_reset_password_path(@conn, :new) %>
 </p>

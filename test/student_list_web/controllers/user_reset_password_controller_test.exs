@@ -14,6 +14,7 @@ defmodule StudentListWeb.UserResetPasswordControllerTest do
       conn = get(conn, Routes.user_reset_password_path(conn, :new))
       response = html_response(conn, 200)
       assert response =~ "<h1>Forgot your password?</h1>"
+      refute response =~ "Register"
     end
   end
 

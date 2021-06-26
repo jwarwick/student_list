@@ -3,17 +3,18 @@ defmodule StudentListWeb.UserSessionControllerTest do
 
   import StudentList.AccountsFixtures
 
-  setup do
-    %{user: user_fixture()}
-  end
 
   describe "GET /users/log_in" do
+    setup do
+      %{user: user_fixture()}
+    end
+
     test "renders log in page", %{conn: conn} do
       conn = get(conn, Routes.user_session_path(conn, :new))
       response = html_response(conn, 200)
       assert response =~ "<h1>Log in</h1>"
       assert response =~ "Log in"
-      assert response =~ "Register"
+      refute response =~ "Register"
     end
 
     test "redirects if already logged in", %{conn: conn, user: user} do
@@ -22,7 +23,21 @@ defmodule StudentListWeb.UserSessionControllerTest do
     end
   end
 
+  describe "GET /users/log_in if no users exist" do
+    test "renders log in page", %{conn: conn} do
+      conn = get(conn, Routes.user_session_path(conn, :new))
+      response = html_response(conn, 200)
+      assert response =~ "<h1>Log in</h1>"
+      assert response =~ "Log in"
+      assert response =~ "Register"
+    end
+  end
+
   describe "POST /users/log_in" do
+    setup do
+      %{user: user_fixture()}
+    end
+
     test "logs the user in", %{conn: conn, user: user} do
       conn =
         post(conn, Routes.user_session_path(conn, :create), %{
@@ -81,6 +96,10 @@ defmodule StudentListWeb.UserSessionControllerTest do
   end
 
   describe "DELETE /users/log_out" do
+    setup do
+      %{user: user_fixture()}
+    end
+
     test "logs the user out", %{conn: conn, user: user} do
       conn = conn |> log_in_user(user) |> delete(Routes.user_session_path(conn, :delete))
       assert redirected_to(conn) == "/users/log_in"
