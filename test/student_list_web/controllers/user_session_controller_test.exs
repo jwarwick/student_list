@@ -12,8 +12,8 @@ defmodule StudentListWeb.UserSessionControllerTest do
     test "renders log in page", %{conn: conn} do
       conn = get(conn, Routes.user_session_path(conn, :new))
       response = html_response(conn, 200)
-      assert response =~ "<h1>Log in</h1>"
-      assert response =~ "Log in"
+      assert response =~ "<h1>Login</h1>"
+      assert response =~ "Login"
       refute response =~ "Register"
     end
 
@@ -27,8 +27,8 @@ defmodule StudentListWeb.UserSessionControllerTest do
     test "renders log in page", %{conn: conn} do
       conn = get(conn, Routes.user_session_path(conn, :new))
       response = html_response(conn, 200)
-      assert response =~ "<h1>Log in</h1>"
-      assert response =~ "Log in"
+      assert response =~ "<h1>Login</h1>"
+      assert response =~ "Login"
       assert response =~ "Register"
     end
   end
@@ -90,7 +90,7 @@ defmodule StudentListWeb.UserSessionControllerTest do
         })
 
       response = html_response(conn, 200)
-      assert response =~ "<h1>Log in</h1>"
+      assert response =~ "<h1>Login</h1>"
       assert response =~ "Invalid email or password"
     end
   end

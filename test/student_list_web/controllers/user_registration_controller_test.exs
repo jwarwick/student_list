@@ -20,7 +20,7 @@ defmodule StudentListWeb.UserRegistrationControllerTest do
       conn = get(conn, Routes.user_registration_path(conn, :new))
       response = html_response(conn, 200)
       assert response =~ "<h1>Register</h1>"
-      assert response =~ "Log in"
+      assert response =~ "Login"
       assert response =~ "Register"
     end
 
