@@ -11,4 +11,10 @@ defmodule StudentListWeb.PageLiveTest do
     assert disconnected_html =~ "Submit"
     assert connected_html =~ "Submit"
   end
+
+  test "basic rendering", %{conn: conn} do
+    {:ok, _live, html} = live(conn, "/")
+
+    assert html =~ "Add your information!"
+  end
 end
