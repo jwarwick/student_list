@@ -37,6 +37,7 @@
             <a href="/entries">Entries</a>
             <a href="/listings">Directory</a>
             <a href="/members">Users</a>
+            <a href="/settings">Site Configuration</a>
           </nav>
         </div>
       </section>

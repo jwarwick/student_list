@@ -15,6 +15,7 @@ defmodule StudentList.Directory do
   alias StudentList.Directory.Student
   alias StudentList.Directory.Adult
   alias StudentList.Directory.Entry
+  alias StudentList.Directory.Setting
 
   @pagination [page_size: 15]
   @pagination_distance 5
@@ -225,6 +226,14 @@ defmodule StudentList.Directory do
   defp filter_config(:entries) do
     defconfig do
       text :content
+
+    end
+  end
+
+  defp filter_config(:settings) do
+    defconfig do
+      text :key
+      text :value
 
     end
   end
@@ -800,145 +809,145 @@ defmodule StudentList.Directory do
 
 
 
-@doc """
-Paginate the list of entries using filtrex
-filters.
+  @doc """
+  Paginate the list of entries using filtrex
+  filters.
 
-## Examples
+  ## Examples
 
-    iex> list_entries(%{})
-    %{entries: [%Entry{}], ...}
-"""
-@spec paginate_entries(map) :: {:ok, map} | {:error, any}
-def paginate_entries(params \\ %{}) do
-  params =
-    params
-    |> Map.put_new("sort_direction", "desc")
-    |> Map.put_new("sort_field", "inserted_at")
+  iex> list_entries(%{})
+  %{entries: [%Entry{}], ...}
+  """
+  @spec paginate_entries(map) :: {:ok, map} | {:error, any}
+  def paginate_entries(params \\ %{}) do
+    params =
+      params
+      |> Map.put_new("sort_direction", "desc")
+      |> Map.put_new("sort_field", "inserted_at")
 
-  {:ok, sort_direction} = Map.fetch(params, "sort_direction")
-  {:ok, sort_field} = Map.fetch(params, "sort_field")
+    {:ok, sort_direction} = Map.fetch(params, "sort_direction")
+    {:ok, sort_field} = Map.fetch(params, "sort_field")
 
-  with {:ok, filter} <- Filtrex.parse_params(filter_config(:entries), params["entry"] || %{}),
-       %Scrivener.Page{} = page <- do_paginate_entries(filter, params) do
-    {:ok,
-      %{
-        entries: page.entries,
-        page_number: page.page_number,
-        page_size: page.page_size,
-        total_pages: page.total_pages,
-        total_entries: page.total_entries,
-        distance: @pagination_distance,
-        sort_field: sort_field,
-        sort_direction: sort_direction
-      }
-    }
-  else
-    {:error, error} -> {:error, error}
-    error -> {:error, error}
+    with {:ok, filter} <- Filtrex.parse_params(filter_config(:entries), params["entry"] || %{}),
+         %Scrivener.Page{} = page <- do_paginate_entries(filter, params) do
+           {:ok,
+             %{
+               entries: page.entries,
+               page_number: page.page_number,
+               page_size: page.page_size,
+               total_pages: page.total_pages,
+               total_entries: page.total_entries,
+               distance: @pagination_distance,
+               sort_field: sort_field,
+               sort_direction: sort_direction
+             }
+           }
+    else
+      {:error, error} -> {:error, error}
+      error -> {:error, error}
+         end
   end
-end
 
-defp do_paginate_entries(filter, params) do
-  Entry
-  |> Filtrex.query(filter)
-  |> order_by(^sort(params))
-  |> paginate(Repo, params, @pagination)
-end
+  defp do_paginate_entries(filter, params) do
+    Entry
+    |> Filtrex.query(filter)
+    |> order_by(^sort(params))
+    |> paginate(Repo, params, @pagination)
+  end
 
-@doc """
-Returns the list of entries.
+  @doc """
+  Returns the list of entries.
 
-## Examples
+  ## Examples
 
-    iex> list_entries()
-    [%Entry{}, ...]
+  iex> list_entries()
+  [%Entry{}, ...]
 
-"""
-def list_entries do
-  Repo.all(Entry) |> Repo.preload([:students, :addresses])
-end
+  """
+  def list_entries do
+    Repo.all(Entry) |> Repo.preload([:students, :addresses])
+  end
 
-@doc """
-Gets a single entry.
+  @doc """
+  Gets a single entry.
 
-Raises `Ecto.NoResultsError` if the Entry does not exist.
+  Raises `Ecto.NoResultsError` if the Entry does not exist.
 
-## Examples
+  ## Examples
 
-    iex> get_entry!(123)
-    %Entry{}
-
-    iex> get_entry!(456)
-    ** (Ecto.NoResultsError)
-
-"""
-def get_entry!(id), do: Repo.get!(Entry, id) |> Repo.preload([:students, :addresses])
-
-@doc """
-Creates a entry.
-
-## Examples
-
-    iex> create_entry(%{field: value})
-    {:ok, %Entry{}}
-
-    iex> create_entry(%{field: bad_value})
-    {:error, %Ecto.Changeset{}}
-
-"""
-def create_entry(attrs \\ %{}) do
+  iex> get_entry!(123)
   %Entry{}
-  |> Entry.changeset(attrs)
-  |> Repo.insert()
-end
 
-@doc """
-Updates a entry.
+  iex> get_entry!(456)
+  ** (Ecto.NoResultsError)
 
-## Examples
+  """
+  def get_entry!(id), do: Repo.get!(Entry, id) |> Repo.preload([:students, :addresses])
 
-    iex> update_entry(entry, %{field: new_value})
-    {:ok, %Entry{}}
+  @doc """
+  Creates a entry.
 
-    iex> update_entry(entry, %{field: bad_value})
-    {:error, %Ecto.Changeset{}}
+  ## Examples
 
-"""
-def update_entry(%Entry{} = entry, attrs) do
-  entry
-  |> Entry.changeset(attrs)
-  |> Repo.update()
-end
+  iex> create_entry(%{field: value})
+  {:ok, %Entry{}}
 
-@doc """
-Deletes a Entry.
+  iex> create_entry(%{field: bad_value})
+  {:error, %Ecto.Changeset{}}
 
-## Examples
+  """
+  def create_entry(attrs \\ %{}) do
+    %Entry{}
+    |> Entry.changeset(attrs)
+    |> Repo.insert()
+  end
 
-    iex> delete_entry(entry)
-    {:ok, %Entry{}}
+  @doc """
+  Updates a entry.
 
-    iex> delete_entry(entry)
-    {:error, %Ecto.Changeset{}}
+  ## Examples
 
-"""
-def delete_entry(%Entry{} = entry) do
-  Repo.delete(entry)
-end
+  iex> update_entry(entry, %{field: new_value})
+  {:ok, %Entry{}}
 
-@doc """
-Returns an `%Ecto.Changeset{}` for tracking entry changes.
+  iex> update_entry(entry, %{field: bad_value})
+  {:error, %Ecto.Changeset{}}
 
-## Examples
+  """
+  def update_entry(%Entry{} = entry, attrs) do
+    entry
+    |> Entry.changeset(attrs)
+    |> Repo.update()
+  end
 
-    iex> change_entry(entry)
-    %Ecto.Changeset{source: %Entry{}}
+  @doc """
+  Deletes a Entry.
 
-"""
-def change_entry(%Entry{} = entry, attrs \\ %{}) do
-  Entry.changeset(entry, attrs)
-end
+  ## Examples
+
+  iex> delete_entry(entry)
+  {:ok, %Entry{}}
+
+  iex> delete_entry(entry)
+  {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_entry(%Entry{} = entry) do
+    Repo.delete(entry)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking entry changes.
+
+  ## Examples
+
+  iex> change_entry(entry)
+  %Ecto.Changeset{source: %Entry{}}
+
+  """
+  def change_entry(%Entry{} = entry, attrs \\ %{}) do
+    Entry.changeset(entry, attrs)
+  end
 
 
   @doc """
@@ -946,5 +955,155 @@ end
   """
   def get_listing do
     list_classes() |> Repo.preload([students: [:bus, addresses: :adults]])
+  end
+
+  @doc """
+  Paginate the list of settings using filtrex
+  filters.
+
+  ## Examples
+
+  iex> list_settings(%{})
+  %{settings: [%Setting{}], ...}
+  """
+  @spec paginate_settings(map) :: {:ok, map} | {:error, any}
+  def paginate_settings(params \\ %{}) do
+    params =
+      params
+      |> Map.put_new("sort_direction", "desc")
+      |> Map.put_new("sort_field", "inserted_at")
+
+    {:ok, sort_direction} = Map.fetch(params, "sort_direction")
+    {:ok, sort_field} = Map.fetch(params, "sort_field")
+
+    with {:ok, filter} <- Filtrex.parse_params(filter_config(:settings), params["setting"] || %{}),
+         %Scrivener.Page{} = page <- do_paginate_settings(filter, params) do
+           {:ok,
+             %{
+               settings: page.entries,
+               page_number: page.page_number,
+               page_size: page.page_size,
+               total_pages: page.total_pages,
+               total_entries: page.total_entries,
+               distance: @pagination_distance,
+               sort_field: sort_field,
+               sort_direction: sort_direction
+             }
+           }
+    else
+      {:error, error} -> {:error, error}
+      error -> {:error, error}
+         end
+  end
+
+  defp do_paginate_settings(filter, params) do
+    Setting
+    |> Filtrex.query(filter)
+    |> order_by(^sort(params))
+    |> paginate(Repo, params, @pagination)
+  end
+
+  @doc """
+  Returns the list of settings.
+
+  ## Examples
+
+  iex> list_settings()
+  [%Setting{}, ...]
+
+  """
+  def list_settings do
+    Repo.all(Setting)
+  end
+
+  @doc """
+  Gets a single setting.
+
+  Raises `Ecto.NoResultsError` if the Setting does not exist.
+
+  ## Examples
+
+  iex> get_setting!(123)
+  %Setting{}
+
+  iex> get_setting!(456)
+  ** (Ecto.NoResultsError)
+
+  """
+  def get_setting!(id), do: Repo.get!(Setting, id)
+
+  @doc """
+  Creates a setting.
+
+  ## Examples
+
+  iex> create_setting(%{field: value})
+  {:ok, %Setting{}}
+
+  iex> create_setting(%{field: bad_value})
+  {:error, %Ecto.Changeset{}}
+
+  """
+  def create_setting(attrs \\ %{}) do
+    %Setting{}
+    |> Setting.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a setting.
+
+  ## Examples
+
+  iex> update_setting(setting, %{field: new_value})
+  {:ok, %Setting{}}
+
+  iex> update_setting(setting, %{field: bad_value})
+  {:error, %Ecto.Changeset{}}
+
+  """
+  def update_setting(%Setting{} = setting, attrs) do
+    setting
+    |> Setting.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a Setting.
+
+  ## Examples
+
+  iex> delete_setting(setting)
+  {:ok, %Setting{}}
+
+  iex> delete_setting(setting)
+  {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_setting(%Setting{} = setting) do
+    Repo.delete(setting)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking setting changes.
+
+  ## Examples
+
+  iex> change_setting(setting)
+  %Ecto.Changeset{source: %Setting{}}
+
+  """
+  def change_setting(%Setting{} = setting, attrs \\ %{}) do
+    Setting.changeset(setting, attrs)
+  end
+
+  @doc """
+  Get the support_email configuration
+  """
+  def support_email do
+    case Repo.get_by(Setting, key: "support_email") do
+      %Setting{value: value} -> value
+      _ -> nil
+    end
   end
 end

@@ -36,10 +36,14 @@ defmodule StudentListWeb.PageLive do
   def render(assigns) do
     ~F"""
     <div :if={@submitted}>
-     <Confirmation />
+     <Confirmation
+        support_email={Directory.support_email()}
+     />
     </div>
     <div :if={!@submitted}>
-      <Heading />
+      <Heading
+        support_email={Directory.support_email()}
+      />
 
       <div class="mb-6 mt-4">
         <div class="container">

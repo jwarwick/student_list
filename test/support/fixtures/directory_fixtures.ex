@@ -101,4 +101,19 @@ defmodule StudentList.DirectoryFixtures do
 
     entry
   end
+
+  @doc """
+  Generate a setting.
+  """
+  def setting_fixture(attrs \\ %{}) do
+    {:ok, setting} =
+      attrs
+      |> Enum.into(%{
+        key: "some key",
+        value: "some value"
+      })
+      |> StudentList.Directory.create_setting()
+
+    setting
+  end
 end

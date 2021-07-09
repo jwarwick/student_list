@@ -503,4 +503,104 @@ defmodule StudentList.DirectoryTest do
       assert %Ecto.Changeset{} = Directory.change_entry(entry)
     end
   end
+
+  describe "email settings" do
+    alias StudentList.Directory.Setting
+      @test_email "test@example.com"
+
+    test "no support email defined returns nil" do
+      assert Directory.support_email() == nil
+    end
+
+    test "support email returned if defined" do
+      Directory.create_setting(%{key: "support_email", value: @test_email})
+
+      assert Directory.support_email() == @test_email
+    end
+
+    test "other setting does not return support email" do
+      Directory.create_setting(%{key: "not_support_email", value: @test_email})
+
+      assert Directory.support_email() == nil
+    end
+  end
+
+  describe "settings" do
+    alias StudentList.Directory.Setting
+
+    @valid_attrs %{key: "some key", value: "some value"}
+    @update_attrs %{key: "some updated key", value: "some updated value"}
+    @invalid_attrs %{key: nil, value: nil}
+
+    def setting_fixture(attrs \\ %{}) do
+      {:ok, setting} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Directory.create_setting()
+
+      setting
+    end
+
+    test "paginate_settings/1 returns paginated list of settings" do
+      for _ <- 1..20 do
+        setting_fixture()
+      end
+
+      {:ok, %{settings: settings} = page} = Directory.paginate_settings(%{})
+
+      assert length(settings) == 15
+      assert page.page_number == 1
+      assert page.page_size == 15
+      assert page.total_pages == 2
+      assert page.total_entries == 20
+      assert page.distance == 5
+      assert page.sort_field == "inserted_at"
+      assert page.sort_direction == "desc"
+    end
+
+    test "list_settings/0 returns all settings" do
+      setting = setting_fixture()
+      assert Directory.list_settings() == [setting]
+    end
+
+    test "get_setting!/1 returns the setting with given id" do
+      setting = setting_fixture()
+      assert Directory.get_setting!(setting.id) == setting
+    end
+
+    test "create_setting/1 with valid data creates a setting" do
+      assert {:ok, %Setting{} = setting} = Directory.create_setting(@valid_attrs)
+      assert setting.key == "some key"
+      assert setting.value == "some value"
+    end
+
+    test "create_setting/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Directory.create_setting(@invalid_attrs)
+    end
+
+    test "update_setting/2 with valid data updates the setting" do
+      setting = setting_fixture()
+      assert {:ok, setting} = Directory.update_setting(setting, @update_attrs)
+      assert %Setting{} = setting
+      assert setting.key == "some updated key"
+      assert setting.value == "some updated value"
+    end
+
+    test "update_setting/2 with invalid data returns error changeset" do
+      setting = setting_fixture()
+      assert {:error, %Ecto.Changeset{}} = Directory.update_setting(setting, @invalid_attrs)
+      assert setting == Directory.get_setting!(setting.id)
+    end
+
+    test "delete_setting/1 deletes the setting" do
+      setting = setting_fixture()
+      assert {:ok, %Setting{}} = Directory.delete_setting(setting)
+      assert_raise Ecto.NoResultsError, fn -> Directory.get_setting!(setting.id) end
+    end
+
+    test "change_setting/1 returns a setting changeset" do
+      setting = setting_fixture()
+      assert %Ecto.Changeset{} = Directory.change_setting(setting)
+    end
+  end
 end

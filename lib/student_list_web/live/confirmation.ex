@@ -6,6 +6,9 @@ defmodule StudentListWeb.Live.Confirmation do
   def render(assigns) do
     ~F"""
     <h1>Thanks for submitting your info!!!</h1>
+    <p :if={@support_email}>
+      Questions or comments? Email <a href={"mailto:#{@support_email}?Subject=Support"}>{@support_email}</a>
+    </p>
     """
   end
 # 
