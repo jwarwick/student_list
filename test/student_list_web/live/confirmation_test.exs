@@ -9,10 +9,12 @@ defmodule StudentListWeb.ConfirmationTest do
   test "render a confirmation component" do
     html = render_surface do
       ~F"""
-      <Confirmation />
+      <Confirmation
+        students={[]}
+      />
       """
     end
 
-    assert html =~ "Thanks for submitting your info!!!"
+    assert html =~ "The information below has been submitted for the school directory."
   end
 end

@@ -596,7 +596,7 @@ defmodule StudentList.Directory do
   ** (Ecto.NoResultsError)
 
   """
-  def get_student!(id), do: Repo.get!(Student, id) |> Repo.preload([:bus, :class, :addresses])
+  def get_student!(id), do: Repo.get!(Student, id) |> Repo.preload([:bus, :class, addresses: [:adults]])
 
   @doc """
   Creates a student.

@@ -1,79 +1,86 @@
 defmodule StudentListWeb.Live.Confirmation do
   use Surface.Component
+  alias StudentList.Directory.Listing
 
   prop support_email, :string, default: nil
+  prop students, :any
 
   def render(assigns) do
     ~F"""
-    <h1>Thanks for submitting your info!!!</h1>
-    <p :if={@support_email}>
-      Questions or comments? Email <a href={"mailto:#{@support_email}?Subject=Support"}>{@support_email}</a>
-    </p>
+    <section class="hero is-primary">
+      <div class="hero-body">
+        <p class="title">
+          Thanks!
+        </p>
+        <p class="subtitle">
+          The information below has been submitted for the school directory.
+        </p>
+        <p :if={@support_email} class="subtitle">
+          Questions or comments? Email <a href={"mailto:#{@support_email}?Subject=Support"}>{@support_email}</a>
+        </p>
+      </div>
+    </section>
+
+    <section>
+    <div class="directory">
+      <div class="students">
+        {#for student <- @students}
+        <div class="classroom">
+          <div class="class_name">
+            <h2 class="class_name">{student.class.name}</h2>
+            <h3 class="teacher_name">{student.class.teacher}</h3>
+          </div>
+        </div>
+       <div class="student_name_bus">
+         <h4 class="student_name">{Listing.format_name(student.last_name)}, {Listing.format_name(student.first_name)}</h4>
+         {#if student.bus.should_display}
+           <span class="bus">{student.bus.name}</span><br>
+         {/if}
+         <br>
+       </div>
+           {#for address <- student.addresses}
+             {#for parent <- address.adults}
+              <div class="parent_name">
+                <span><b>{Listing.format_name(parent.first_name)} {Listing.format_name(parent.last_name)}</b></span><br>
+                <div class="parent_contact">
+                  {#if Listing.not_empty(parent.email)}
+                    <span class="email">{String.trim(parent.email)}</span><br>
+                  {/if}
+                  {#if Listing.not_empty(parent.mobile_phone)}
+                    <span class="phone">Cell: {Listing.format_phone(parent.mobile_phone)}</span><br>
+                  {/if}
+                  <br>
+                </div>
+              </div>
+            {/for}
+            <div class="parent_address">
+            </div>
+              {#if Listing.not_empty(address.address1)}
+                <span class="address_street">{String.trim(address.address1)}</span><br>
+              {/if}
+              {#if Listing.not_empty(address.address2)}
+                <span class="address_street2">{String.trim(address.address2)}</span><br>
+              {/if}
+              {#if Listing.not_empty(address.city)}
+                <span class="address_city">{String.trim(address.city)},</span>
+              {/if}
+              {#if Listing.not_empty(address.state)}
+                <span class="address_state">{Listing.format_state(address.state)}  </span>
+              {/if}
+              {#if Listing.not_empty(address.zip)}
+                <span class="address_zip">{String.trim(address.zip)}</span><br>
+              {/if}
+              {#if Listing.not_empty(address.phone)}
+                <span class="home_phone">Home Phone: {Listing.format_phone(address.phone)}</span><br>
+              {/if}
+            <br>
+          {/for}
+          <p class="notes">{student.notes}</p>
+          <br>
+        {/for}
+      </div>
+    </div>
+    </section>
     """
   end
-# 
-#   <div class="container">
-#   <div class="alert alert-success">
-#     <h3>Thanks</h3>
-#     The information below has been submitted for the school directory.
-#     <%= if @support_email do %>
-#       <br>Questions or comments? Email <a href='mailto:<%= @support_email %>?Subject=Support'>
-#         <%= @support_email %></a>
-#     <% end %>
-#     <br><a class="alert-link" href='/'>Add another student</a>
-#   </div>
-#   <div class="students">
-#     <%= for student <- @students do %>
-#       <div class="class_name">
-#         <h2><%= student.class.name %></h2>
-#         <h3 class="teacher_name"><%= student.class.teacher %></h3>
-#       </div>
-#       <div class="student_name_bus">
-#         <h4 class="student_name"><%= student.last_name %>, <%= student.first_name %></h4>
-#         <%= if student.bus.should_display do %>
-#           <span class="bus"><%= student.bus.name %></span><br>
-#         <% end %>
-#         <br>
-#       </div>
-#       <%= for {parent_list, address} <- ClassList.DirectoryView.group_parents(student) do %>
-#         <%= for parent <- parent_list do %>
-#           <div class="parent_name">
-#             <span><b><%= parent.first_name %> <%= parent.last_name %></b></span><br>
-#             <div class="parent_contact">
-#               <%= if ClassList.DirectoryView.not_empty(parent.email) do %>
-#                 <span class="email"><%= parent.email %></span><br>
-#               <% end %>
-#               <%= if ClassList.DirectoryView.not_empty(parent.mobile_phone) do %>
-#                 <span class="phone"><%= parent.mobile_phone %></span><br>
-#               <% end %>
-#               <br>
-#             </div>
-#           </div>
-#         <% end %>
-#         <div class="parent_address">
-#           <%= if ClassList.DirectoryView.not_empty(address.address1) do %>
-#             <span class="address_street"><%= address.address1 %></span><br>
-#           <% end %>
-#           <%= if ClassList.DirectoryView.not_empty(address.address2) do %>
-#             <span class="address_street2"><%= address.address2 %></span><br>
-#           <% end %>
-#           <%= if ClassList.DirectoryView.not_empty(address.city) do %>
-#             <span class="address_city"><%= address.city %>,</span>
-#           <% end %>
-#           <%= if ClassList.DirectoryView.not_empty(address.state) do %>
-#             <span class="address_state"><%= address.state %>  </span>
-#           <% end %>
-#           <%= if ClassList.DirectoryView.not_empty(address.zip) do %>
-#             <span class="address_zip"><%= address.zip %></span><br>
-#           <% end %>
-#           <%= if ClassList.DirectoryView.not_empty(address.phone) do %>
-#             <span class="phone"><%= address.phone %></span><br>
-#           <% end %>
-#         </div>
-#         <br>
-#       <% end %>
-#       <p class="notes"><%= student.notes %></p>
-#     <% end %>
-#   </div>
-# </div>
 end

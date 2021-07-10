@@ -13,6 +13,7 @@ defmodule StudentListWeb.PageLive do
   alias StudentListWeb.Live.{Heading, StudentEntry, AddressEntry, Confirmation}
 
   data submitted, :boolean, default: false
+  data submitted_data, :list, default: []
   data students, :list, default: [%{}]
   data addresses, :list, default: [%{"adults" => [%{}]}]
   data notes, :string, default: ""
@@ -38,6 +39,7 @@ defmodule StudentListWeb.PageLive do
     <div :if={@submitted}>
      <Confirmation
         support_email={Directory.support_email()}
+        students={@submitted_data}
      />
     </div>
     <div :if={!@submitted}>
@@ -134,7 +136,7 @@ defmodule StudentListWeb.PageLive do
                       |> Entry.creation_transaction(socket.assigns, students, addresses)
                       |> Repo.transaction()
 
-    socket = assign(socket, submitted: true)
+    socket = assign(socket, submitted: true, submitted_data: Enum.map(students, &Directory.get_student!/1))
     {:noreply, socket}
   end
 
