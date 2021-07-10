@@ -63,7 +63,7 @@ defmodule StudentList.Directory.Listing do
     state = format_state(state)
     {_has_zip, zip} = fix_string(zip)
 
-    comma = if (has_city && has_state) do
+    comma = if has_city && has_state do
       ", "
     else
       ""

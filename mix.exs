@@ -50,6 +50,8 @@ defmodule StudentList.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:torch, "~> 3.6"},
       {:sobelow, "~> 0.8", only: :dev},
+      {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
+      {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
       {:surface, "~> 0.5"},
     ]
   end

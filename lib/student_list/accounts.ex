@@ -12,7 +12,7 @@ defmodule StudentList.Accounts do
   Are users allowed to register? Only if no other users exist
   """
   def can_register do
-    length(list_members()) == 0
+    Enum.empty?(list_members())
   end
 
   ## Database getters
