@@ -28,6 +28,11 @@ defmodule StudentListWeb.MemberController do
   def create(conn, %{"user" => member_params}) do
     case Accounts.create_member(member_params) do
       {:ok, member} ->
+        {:ok, _} =
+          Accounts.deliver_user_confirmation_instructions(
+            member,
+            &Routes.user_confirmation_url(conn, :confirm, &1)
+          )
         conn
         |> put_flash(:info, "User created successfully.")
         |> redirect(to: Routes.member_path(conn, :show, member))
@@ -39,25 +44,6 @@ defmodule StudentListWeb.MemberController do
   def show(conn, %{"id" => id}) do
     member = Accounts.get_member!(id)
     render(conn, "show.html", member: member)
-  end
-
-  def edit(conn, %{"id" => id}) do
-    member = Accounts.get_member!(id)
-    changeset = Accounts.change_member(member)
-    render(conn, "edit.html", member: member, changeset: changeset)
-  end
-
-  def update(conn, %{"id" => id, "user" => member_params}) do
-    member = Accounts.get_member!(id)
-
-    case Accounts.update_member(member, member_params) do
-      {:ok, member} ->
-        conn
-        |> put_flash(:info, "User updated successfully.")
-        |> redirect(to: Routes.member_path(conn, :show, member))
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "edit.html", member: member, changeset: changeset)
-    end
   end
 
   def delete(conn, %{"id" => id}) do

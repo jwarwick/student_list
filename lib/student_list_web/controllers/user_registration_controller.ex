@@ -33,10 +33,10 @@ defmodule StudentListWeb.UserRegistrationController do
         {:error, %Ecto.Changeset{} = changeset} ->
           render(conn, "new.html", changeset: changeset)
       end
-      else
-        conn
-        |> put_status(:not_found)
-        |> text("Not found")
+    else
+      conn
+      |> put_status(:not_found)
+      |> text("Not found")
     end
   end
 end

@@ -52,7 +52,6 @@
               
               <td class="torch-actions">
                 <span><%= link "Show", to: Routes.member_path(@conn, :show, member) %></span>
-                <span><%= link "Edit", to: Routes.member_path(@conn, :edit, member) %></span>
                 <span><%= link "Delete", to: Routes.member_path(@conn, :delete, member), method: :delete, data: [confirm: "Are you sure?"] %></span>
               </td>
             </tr>
