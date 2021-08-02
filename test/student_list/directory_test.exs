@@ -479,29 +479,12 @@ defmodule StudentList.DirectoryTest do
       assert {:error, %Ecto.Changeset{}} = Directory.create_entry(@invalid_attrs)
     end
 
-    test "update_entry/2 with valid data updates the entry" do
-      entry = entry_fixture()
-      assert {:ok, entry} = Directory.update_entry(entry, @update_attrs)
-      assert %Entry{} = entry
-      assert entry.content == "some updated content"
-    end
-
-    test "update_entry/2 with invalid data returns error changeset" do
-      entry = entry_fixture()
-      assert {:error, %Ecto.Changeset{}} = Directory.update_entry(entry, @invalid_attrs)
-      assert entry == Directory.get_entry!(entry.id)
-    end
-
     test "delete_entry/1 deletes the entry" do
       entry = entry_fixture()
       assert {:ok, %Entry{}} = Directory.delete_entry(entry)
       assert_raise Ecto.NoResultsError, fn -> Directory.get_entry!(entry.id) end
     end
 
-    test "change_entry/1 returns a entry changeset" do
-      entry = entry_fixture()
-      assert %Ecto.Changeset{} = Directory.change_entry(entry)
-    end
   end
 
   describe "email settings" do

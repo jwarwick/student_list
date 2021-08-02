@@ -1,6 +1,5 @@
 <section id="torch-toolbar">
   <div class="torch-container">
-    <%= link "Edit", to: Routes.entry_path(@conn, :edit, @entry), class: "torch-button" %>
     <%= link "Back", to: Routes.entry_path(@conn, :index), class: "torch-button" %>
   </div>
 </section>

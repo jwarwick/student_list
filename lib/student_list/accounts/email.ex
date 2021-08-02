@@ -7,6 +7,26 @@ defmodule StudentList.Accounts.Email do
     Directory.support_email() || "support@example.com"
   end
 
+  def email_entry(assigns) do
+    email = Directory.support_email()
+    if email do
+      value = assigns
+              |> Map.take([:students, :addresses, :notes])
+              |> Jason.encode!()
+      new_email(
+        to: email,
+        from: from_email(),
+        subject: "Data Submission",
+        html_body: """
+        <pre>
+        #{value}
+        </pre>
+        """,
+        text_body: "#{value}"
+    )
+    end
+  end
+
   def confirmation_instructions(user, url) do
     new_email(
       to: user.email,

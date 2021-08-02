@@ -1,6 +1,5 @@
 <section id="torch-toolbar">
   <div class="torch-container">
-    <%= link "New Entry", to: Routes.entry_path(@conn, :new) %>
   </div>
 </section>
 <section id="torch-index-content">
@@ -14,9 +13,6 @@
             <%= filter_select(:entry, :content, @conn.params) %>
             <%= filter_string_input(:entry, :content, @conn.params) %>
           </div>
-        
-        
-        
         
         <button type="submit" class="torch-button">Search</button>
         <%= link "Clear Filters", to: Routes.entry_path(@conn, :index) %>
@@ -43,7 +39,6 @@
               
               <td class="torch-actions">
                 <span><%= link "Show", to: Routes.entry_path(@conn, :show, entry) %></span>
-                <span><%= link "Edit", to: Routes.entry_path(@conn, :edit, entry) %></span>
                 <span><%= link "Delete", to: Routes.entry_path(@conn, :delete, entry), method: :delete, data: [confirm: "Are you sure?"] %></span>
               </td>
             </tr>

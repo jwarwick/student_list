@@ -9,6 +9,8 @@ defmodule StudentList.Directory do
   import Torch.Helpers, only: [sort: 1, paginate: 4]
   import Filtrex.Type.Config
 
+  alias StudentList.Accounts.{Email, Mailer}
+
   alias StudentList.Directory.Bus
   alias StudentList.Directory.Class
   alias StudentList.Directory.Address
@@ -903,24 +905,6 @@ defmodule StudentList.Directory do
   end
 
   @doc """
-  Updates a entry.
-
-  ## Examples
-
-  iex> update_entry(entry, %{field: new_value})
-  {:ok, %Entry{}}
-
-  iex> update_entry(entry, %{field: bad_value})
-  {:error, %Ecto.Changeset{}}
-
-  """
-  def update_entry(%Entry{} = entry, attrs) do
-    entry
-    |> Entry.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
   Deletes a Entry.
 
   ## Examples
@@ -937,18 +921,12 @@ defmodule StudentList.Directory do
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking entry changes.
-
-  ## Examples
-
-  iex> change_entry(entry)
-  %Ecto.Changeset{source: %Entry{}}
-
+  Email a copy of the submitted form data to the support email
   """
-  def change_entry(%Entry{} = entry, attrs \\ %{}) do
-    Entry.changeset(entry, attrs)
+  def email_entry(assigns) do
+    Email.email_entry(assigns)
+    |> Mailer.deliver_later()
   end
-
 
   @doc """
   Return the complete directory listing

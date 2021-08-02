@@ -136,6 +136,8 @@ defmodule StudentListWeb.PageLive do
                       |> Entry.creation_transaction(socket.assigns, students, addresses)
                       |> Repo.transaction()
 
+    Directory.email_entry(socket.assigns)
+
     socket = assign(socket, submitted: true, submitted_data: Enum.map(students, &Directory.get_student!/1))
     {:noreply, socket}
   end
