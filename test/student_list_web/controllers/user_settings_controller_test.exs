@@ -1,5 +1,6 @@
 defmodule StudentListWeb.UserSettingsControllerTest do
   use StudentListWeb.ConnCase, async: true
+  use Bamboo.Test
 
   alias StudentList.Accounts
   import StudentList.AccountsFixtures
@@ -62,16 +63,19 @@ defmodule StudentListWeb.UserSettingsControllerTest do
   describe "PUT /users/settings (change email form)" do
     @tag :capture_log
     test "updates the user email", %{conn: conn, user: user} do
+      new_email = unique_user_email()
       conn =
         put(conn, Routes.user_settings_path(conn, :update), %{
           "action" => "update_email",
           "current_password" => valid_user_password(),
-          "user" => %{"email" => unique_user_email()}
+          "user" => %{"email" => new_email}
         })
 
       assert redirected_to(conn) == Routes.user_settings_path(conn, :edit)
       assert get_flash(conn, :info) =~ "A link to confirm your email"
       assert Accounts.get_user_by_email(user.email)
+
+      assert_delivered_email_matches(%{to: [{_, ^new_email}]})
     end
 
     test "does not update email on invalid data", %{conn: conn} do
@@ -86,6 +90,7 @@ defmodule StudentListWeb.UserSettingsControllerTest do
       assert response =~ "<h1>Settings</h1>"
       assert response =~ "must have the @ sign and no spaces"
       assert response =~ "is not valid"
+      assert_no_emails_delivered()
     end
   end
 

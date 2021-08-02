@@ -1,5 +1,6 @@
 defmodule StudentListWeb.UserResetPasswordControllerTest do
   use StudentListWeb.ConnCase, async: true
+  use Bamboo.Test
 
   alias StudentList.Accounts
   alias StudentList.Repo
@@ -29,6 +30,8 @@ defmodule StudentListWeb.UserResetPasswordControllerTest do
       assert redirected_to(conn) == "/users/log_in"
       assert get_flash(conn, :info) =~ "If your email is in our system"
       assert Repo.get_by!(Accounts.UserToken, user_id: user.id).context == "reset_password"
+      email_addr = user.email
+      assert_delivered_email_matches(%{to: [{_, ^email_addr}]})
     end
 
     test "does not send reset password token if email is invalid", %{conn: conn} do
@@ -40,6 +43,7 @@ defmodule StudentListWeb.UserResetPasswordControllerTest do
       assert redirected_to(conn) == "/users/log_in"
       assert get_flash(conn, :info) =~ "If your email is in our system"
       assert Repo.all(Accounts.UserToken) == []
+      assert_no_emails_delivered()
     end
   end
 

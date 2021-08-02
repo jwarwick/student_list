@@ -24,3 +24,7 @@ config :student_list, StudentListWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+# Configure Bamboo mailer test adapter
+config :student_list, StudentList.Accounts.Mailer,
+  adapter: Bamboo.TestAdapter

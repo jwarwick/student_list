@@ -53,6 +53,7 @@ defmodule StudentList.MixProject do
       {:dialyxir, "~> 1.0", only: [:dev], runtime: false},
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false},
       {:surface, "~> 0.5"},
+      {:bamboo, "~> 2.2.0"},
     ]
   end
 

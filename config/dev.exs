@@ -77,3 +77,7 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
+
+# Configure Bamboo mailer
+config :student_list, StudentList.Accounts.Mailer,
+  adapter: Bamboo.LocalAdapter

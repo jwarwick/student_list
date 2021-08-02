@@ -68,6 +68,13 @@
     <% else %>
       <p class="torch-no-data">No Settings match your search.</p>
     <% end %>
+
+    <%= if Mix.env() in [:dev, :test] do %>
+      <br>
+      <div>
+        In development mode, sent emails are available here: <%= link "Sent Emails", to: "/sent_emails" %>
+      </div>
+    <% end %>
     </section>
   </div>
 </section>

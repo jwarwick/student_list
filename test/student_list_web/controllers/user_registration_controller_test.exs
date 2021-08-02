@@ -1,5 +1,6 @@
 defmodule StudentListWeb.UserRegistrationControllerTest do
   use StudentListWeb.ConnCase, async: true
+  use Bamboo.Test
 
   import StudentList.AccountsFixtures
 
@@ -47,6 +48,7 @@ defmodule StudentListWeb.UserRegistrationControllerTest do
       response = text_response(conn, 404)
       assert response =~ "Not found"
       refute get_session(conn, :user_token)
+      assert_no_emails_delivered()
     end
   end
 
@@ -69,6 +71,8 @@ defmodule StudentListWeb.UserRegistrationControllerTest do
       assert response =~ email
       assert response =~ "Settings"
       assert response =~ "Logout"
+
+      assert_delivered_email_matches(%{to: [{_, ^email}]})
     end
 
     test "render errors for invalid data", %{conn: conn} do

@@ -6,7 +6,7 @@ defmodule StudentList.Accounts do
   import Ecto.Query, warn: false
   alias StudentList.Repo
 
-  alias StudentList.Accounts.{User, UserToken, UserNotifier}
+  alias StudentList.Accounts.{User, UserToken, Email, Mailer}
 
   @doc """
   Are users allowed to register? Only if no other users exist
@@ -175,7 +175,8 @@ defmodule StudentList.Accounts do
     {encoded_token, user_token} = UserToken.build_email_token(user, "change:#{current_email}")
 
     Repo.insert!(user_token)
-    UserNotifier.deliver_update_email_instructions(user, update_email_url_fun.(encoded_token))
+    Email.email_change_instructions(user, update_email_url_fun.(encoded_token))
+    |> Mailer.deliver_later()
   end
 
   @doc """
@@ -267,7 +268,8 @@ defmodule StudentList.Accounts do
     else
       {encoded_token, user_token} = UserToken.build_email_token(user, "confirm")
       Repo.insert!(user_token)
-      UserNotifier.deliver_confirmation_instructions(user, confirmation_url_fun.(encoded_token))
+      Email.confirmation_instructions(user, confirmation_url_fun.(encoded_token))
+      |> Mailer.deliver_later()
     end
   end
 
@@ -308,7 +310,8 @@ defmodule StudentList.Accounts do
       when is_function(reset_password_url_fun, 1) do
     {encoded_token, user_token} = UserToken.build_email_token(user, "reset_password")
     Repo.insert!(user_token)
-    UserNotifier.deliver_reset_password_instructions(user, reset_password_url_fun.(encoded_token))
+    Email.password_reset_instructions(user, reset_password_url_fun.(encoded_token))
+    |> Mailer.deliver_later()
   end
 
   @doc """

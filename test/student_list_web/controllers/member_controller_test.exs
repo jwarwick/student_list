@@ -1,5 +1,6 @@
 defmodule StudentListWeb.MemberControllerTest do
   use StudentListWeb.ConnCase
+  use Bamboo.Test
 
   alias StudentList.Accounts
 
@@ -42,11 +43,15 @@ defmodule StudentListWeb.MemberControllerTest do
 
       conn = get conn, Routes.member_path(conn, :show, id)
       assert html_response(conn, 200) =~ "Member Details"
+
+      email = @create_attrs.email
+      assert_delivered_email_matches(%{to: [{_, ^email}]})
     end
 
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post conn, Routes.member_path(conn, :create), user: @invalid_attrs
       assert html_response(conn, 200) =~ "New Member"
+      assert_no_emails_delivered()
     end
   end
 
