@@ -38,6 +38,20 @@ if config_env() == :prod do
     ],
     secret_key_base: secret_key_base
 
+  sendgrid_api_key =
+    System.get_env("SENDGRID_API_KEY") ||
+      raise """
+      environment variable SENDGRID_API_KEY is missing.
+      You can generate one via the SendGrid service
+      """
+
+  config :student_list, StudentList.Accounts.Mailer,
+    adapter: Bamboo.SendGridAdapter,
+      api_key: sendgrid_api_key,
+      hackney_opts: [
+        recv_timeout: :timer.minutes(1)
+      ]
+
   # ## Using releases
   #
   # If you are doing OTP releases, you need to instruct Phoenix

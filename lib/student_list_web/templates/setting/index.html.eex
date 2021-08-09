@@ -69,7 +69,7 @@
       <p class="torch-no-data">No Settings match your search.</p>
     <% end %>
 
-    <%= if Mix.env() in [:dev, :test] do %>
+    <%= if Application.get_env(:student_list, :environment) == :dev do %>
       <br>
       <div>
         In development mode, sent emails are available here: <%= link "Sent Emails", to: "/sent_emails" %>

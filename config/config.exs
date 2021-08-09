@@ -34,6 +34,9 @@ config :torch,
 config :student_list, StudentList.Accounts.Mailer,
   adapter: Bamboo.SendGrid
 
+# Configure dev environment only flag
+config :student_list, :environment, Mix.env()
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

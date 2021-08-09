@@ -11,8 +11,10 @@
     <header>
       <section id="torch-account-info">
         <div class="torch-container">
-          <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
-            <%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home) %>
+          <%= if Application.get_env(:student_list, :environment) == :dev do %>
+            <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
+              <%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home) %>
+            <% end %>
           <% end %>
           <%= @current_user.email %>
           <%= link "Settings", to: Routes.user_settings_path(@conn, :edit) %>
