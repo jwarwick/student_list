@@ -34,7 +34,8 @@ defmodule StudentList.MixProject do
   defp deps do
     [
       {:bcrypt_elixir, "~> 2.0"},
-      {:phoenix, github: "phoenixframework/phoenix", override: true},
+      # {:phoenix, github: "phoenixframework/phoenix", override: true},
+      {:phoenix, "~> 1.5"},
       {:phoenix_ecto, "~> 4.1"},
       {:ecto_sql, "~> 3.5"},
       {:postgrex, ">= 0.0.0"},
