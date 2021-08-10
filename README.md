@@ -22,7 +22,7 @@ student_list_dev=# CREATE EXTENSION citext;
 
 ## Environment Variables
 Needed for Production builds
-`DATABASE_URL`, `SECRET_KEY_BASE`, `SENDGRID_API_KEY`.
+`DATABASE_URL`, `SECRET_KEY_BASE`, `MAILGUN_API_KEY`, `MAILGUN_DOMAIN`.
 
 ## Account Creation
 
