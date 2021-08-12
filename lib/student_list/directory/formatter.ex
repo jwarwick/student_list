@@ -20,21 +20,18 @@ defmodule StudentList.Directory.Formatter do
   Generate the RTF string
   """
   def create do
-    # classes = Directory
-    #   Class
-    #   # |> Class.sorted
-    #   |> Repo.all
-    #   |> Repo.preload([students: from(Student, order_by: [:last_name])])
-    #   |> Repo.preload([students: [:bus, :class, [parents: :address]]])
-
     directory(classes: Directory.get_listing())
   end
 
   @doc """
   Generate RTF file
   """
-  def write(path) do
+  def write do
+    tmp_file = "directory.rtf"
+    tmp_dir = System.tmp_dir!
+    tmp_path = Path.join(tmp_dir, tmp_file)
     result = create()
-    File.write(Path.expand(path), result)
+    :ok = File.write(Path.expand(tmp_path), result)
+    {:ok, tmp_path}
   end
 end

@@ -12,15 +12,12 @@ defmodule StudentListWeb.ListingController do
   end
 
   def download(conn, _params) do
-    tmp_file = "directory.rtf"
-    tmp_dir = System.tmp_dir!
-    tmp_path = Path.join(tmp_dir, tmp_file)
-    :ok = Formatter.write(tmp_path)
+    {:ok, tmp_path} = Formatter.write()
 
     conn
     |> put_resp_content_type("application/rtf")
     |> put_resp_header("content-disposition",
-                       "attachment; filename=\"#{tmp_file}\"")
+                       "attachment; filename=\"directory.rtf\"")
     |> send_file(200, tmp_path)
   end
 end
