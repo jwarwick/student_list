@@ -9,7 +9,7 @@ defmodule StudentList.Directory.Bus do
   schema "buses" do
     field :display_order, :integer
     field :name, :string
-    field :should_display, :boolean, default: false
+    field :should_display, :boolean, default: true
     has_many :students, Student
 
     timestamps()
