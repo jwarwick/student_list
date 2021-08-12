@@ -1,4 +1,7 @@
 defmodule StudentList.Directory.Setting do
+  @moduledoc """
+  Site configuration settings
+  """
   use Ecto.Schema
   import Ecto.Changeset
 

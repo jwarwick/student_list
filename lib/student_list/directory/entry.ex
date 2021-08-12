@@ -1,4 +1,7 @@
 defmodule StudentList.Directory.Entry do
+  @moduledoc """
+  Raw submitted data entry info
+  """
   use Ecto.Schema
   import Ecto.Changeset
   alias Ecto.Multi

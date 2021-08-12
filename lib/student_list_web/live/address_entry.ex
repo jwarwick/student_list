@@ -1,4 +1,7 @@
 defmodule StudentListWeb.Live.AddressEntry do
+  @moduledoc """
+  Address entry component - holds adults and addresses
+  """
   use Surface.LiveComponent
 
   alias Surface.Components.Form

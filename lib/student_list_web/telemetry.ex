@@ -1,4 +1,7 @@
 defmodule StudentListWeb.Telemetry do
+  @moduledoc """
+  Supervisor for application telemetry
+  """
   use Supervisor
   import Telemetry.Metrics
 

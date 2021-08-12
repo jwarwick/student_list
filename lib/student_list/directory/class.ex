@@ -1,4 +1,7 @@
 defmodule StudentList.Directory.Class do
+  @moduledoc """
+  Classroom resource
+  """
   use Ecto.Schema
   import Ecto.Changeset
 

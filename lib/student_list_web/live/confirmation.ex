@@ -1,4 +1,7 @@
 defmodule StudentListWeb.Live.Confirmation do
+  @moduledoc """
+  Data entered confirmation page
+  """
   use Surface.Component
   alias StudentList.Directory.Listing
 

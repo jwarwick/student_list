@@ -1,4 +1,7 @@
 defmodule StudentList.Directory.StudentAddress do
+  @moduledoc """
+  Many-to-many mapping between students and addresses
+  """
   use Ecto.Schema
   import Ecto.Changeset
 

@@ -1,4 +1,7 @@
 defmodule StudentList.Accounts.Email do
+  @moduledoc """
+  Email templates
+  """
   import Bamboo.Email
 
   alias StudentList.Directory

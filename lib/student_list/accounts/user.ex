@@ -1,4 +1,7 @@
 defmodule StudentList.Accounts.User do
+  @moduledoc """
+  Site users/members
+  """
   use Ecto.Schema
   import Ecto.Changeset
 

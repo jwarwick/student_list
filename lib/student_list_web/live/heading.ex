@@ -1,4 +1,7 @@
 defmodule StudentListWeb.Live.Heading do
+  @moduledoc """
+  Title bar component
+  """
   use Surface.Component
 
   prop support_email, :string, default: nil

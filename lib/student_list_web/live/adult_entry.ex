@@ -1,4 +1,7 @@
 defmodule StudentListWeb.Live.AdultEntry do
+  @moduledoc """
+  Adult data entry component
+  """
   use Surface.LiveComponent
 
   alias Surface.Components.Form

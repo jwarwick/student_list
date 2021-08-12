@@ -1,4 +1,8 @@
 defmodule StudentListWeb.UserAuth do
+  @moduledoc """
+  User Authorization support
+  """
+
   import Plug.Conn
   import Phoenix.Controller
 

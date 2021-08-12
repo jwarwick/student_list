@@ -1,4 +1,7 @@
 defmodule StudentList.Directory.Bus do
+  @moduledoc """
+  Bus resource
+  """
   use Ecto.Schema
   import Ecto.Changeset
   alias StudentList.Directory.Student

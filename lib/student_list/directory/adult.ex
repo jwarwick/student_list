@@ -1,4 +1,7 @@
 defmodule StudentList.Directory.Adult do
+  @moduledoc """
+  Adult resource
+  """
   use Ecto.Schema
   import Ecto.Changeset
   alias StudentList.Directory.Address

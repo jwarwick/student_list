@@ -1,4 +1,7 @@
 defmodule StudentListWeb.PageLive do
+  @moduledoc """
+  Top level data entry page
+  """
   use Surface.LiveView
 
   alias Surface.Components.Form

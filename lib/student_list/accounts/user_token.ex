@@ -1,4 +1,7 @@
 defmodule StudentList.Accounts.UserToken do
+  @moduledoc """
+  Session and reset action tokens
+  """
   use Ecto.Schema
   import Ecto.Query
 
