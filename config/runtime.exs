@@ -18,6 +18,7 @@ if config_env() == :prod do
     ssl: true,
     url: database_url,
     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
+    # Gigalixir and Heroku aren't able to connect to provisioned databases with this set
     # socket_options: [:inet6]
 
   secret_key_base =
@@ -25,6 +26,13 @@ if config_env() == :prod do
       raise """
       environment variable SECRET_KEY_BASE is missing.
       You can generate one by calling: mix phx.gen.secret
+      """
+
+  host =
+    System.get_env("HOST") ||
+      raise """
+      environment variable HOST is missing.
+      It should be the FQDN where the content is served.
       """
 
   config :student_list, StudentListWeb.Endpoint,
@@ -36,11 +44,7 @@ if config_env() == :prod do
       ip: {0, 0, 0, 0, 0, 0, 0, 0},
       port: String.to_integer(System.get_env("PORT") || "4000")
     ],
-    url: [host: "#{System.get_env("APP_NAME")}.gigalixirapp.com", port: 80],
-    check_origin: [
-      "https://ses-directory.org",
-      "https://*.ses-directory.org"
-    ],
+    url: [host: host],
     secret_key_base: secret_key_base
 
   mailgun_api_key =
