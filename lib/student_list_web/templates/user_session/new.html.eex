@@ -10,11 +10,11 @@
       <% end %>
 
       <p>
-        <%= email_input f, :email, required: true, placeholder: "Email Address" %>
+        <%= email_input f, :email, required: true, placeholder: "Email Address", autocomplete: "username" %>
       </p>
 
       <p>
-        <%= password_input f, :password, required: true, placeholder: "Password" %>
+        <%= password_input f, :password, required: true, placeholder: "Password", autocomplete: "current-password" %>
       </p>
 
       <p class="remember-me">
