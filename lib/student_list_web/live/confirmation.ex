@@ -12,15 +12,22 @@ defmodule StudentListWeb.Live.Confirmation do
     ~F"""
     <section class="hero is-primary">
       <div class="hero-body">
-        <p class="title">
-          Thanks!
-        </p>
-        <p class="subtitle">
-          The information below has been submitted for the school directory.
-        </p>
-        <p :if={@support_email} class="subtitle">
-          Questions or comments? Email <a href={"mailto:#{@support_email}?Subject=Support"}>{@support_email}</a>
-        </p>
+        <div class="columns is-vcentered">
+          <figure class="column is-narrow image">
+            <img class="hero-logo" src="/images/logo.png")>
+          </figure>
+          <div class="column">
+            <p class="title">
+              Thanks!
+            </p>
+            <p class="subtitle">
+              The information below has been submitted for the school directory.
+            </p>
+            <p :if={@support_email} class="subtitle">
+              Questions or comments? Email <a href={"mailto:#{@support_email}?Subject=Support"}>{@support_email}</a>
+            </p>
+          </div>
+        </div>
       </div>
     </section>
 

@@ -39,7 +39,7 @@ defmodule StudentListWeb.PageLive do
   @impl true
   def render(assigns) do
     ~F"""
-    <div :if={@submitted}>
+    <div :if={@submitted} id="confirmation-panel" phx-hook="ScrollToTop">
      <Confirmation
         support_email={Directory.support_email()}
         students={@submitted_data}
