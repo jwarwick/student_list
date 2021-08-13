@@ -16,6 +16,9 @@ config :student_list, StudentListWeb.Endpoint,
 # Do not print debug messages in production
 config :logger, level: :info
 
+# Configure Content-Security Policy (CSP)
+config :student_list, :content_security_policy, "default-src 'self'; connect-src 'self' wss:;"
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key

@@ -37,6 +37,14 @@ config :student_list, StudentList.Accounts.Mailer,
 # Configure dev environment only flag
 config :student_list, :environment, Mix.env()
 
+# Configure Content-Security Policy (CSP)
+# override this in prod.ex
+config :student_list, :content_security_policy,
+"default-src 'self' 'unsafe-eval' 'unsafe-inline';" <>
+  "connect-src 'self' ws:;" <>
+    "img-src 'self' blob: data:;" <>
+      "font-src 'self' blob: data:;"
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

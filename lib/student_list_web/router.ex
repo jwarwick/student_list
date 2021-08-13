@@ -3,19 +3,7 @@ defmodule StudentListWeb.Router do
 
   import StudentListWeb.UserAuth
 
-  @host :student_list
-        |> Application.fetch_env!(StudentListWeb.Endpoint)
-        |> Keyword.fetch!(:url)
-        |> Keyword.fetch!(:host)
-
-  @content_security_policy (case Mix.env do
-    :prod  -> "default-src 'self'; connect-src wss://#{@host};"
-
-    _ -> "default-src 'self' 'unsafe-eval' 'unsafe-inline'; connect-src ws://#{@host}:4000;" <>
-      "img-src 'self' blob: data:;" <>
-        "font-src 'self' blob: data:;"
-
-  end)
+  @content_security_policy Application.compile_env(:student_list, :content_security_policy)
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -24,7 +12,9 @@ defmodule StudentListWeb.Router do
     plug :put_root_layout, {StudentListWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers,
-      %{"content-security-policy" => @content_security_policy}
+      %{"content-security-policy" => @content_security_policy,
+        "referrer-policy" => "strict-origin-when-cross-origin",
+        "permissions-policy" => "camera=(), microphone=(), payment=(), geolocation=()"}
     plug :fetch_current_user
   end
 
