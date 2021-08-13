@@ -14,7 +14,7 @@ defmodule StudentListWeb.Live.Confirmation do
       <div class="hero-body">
         <div class="columns is-vcentered">
           <figure class="column is-narrow image">
-            <img class="hero-logo" src="/images/logo.png")>
+            <a href="/"><img class="hero-logo" src="/images/logo.png" alt="Logo"></a>
           </figure>
           <div class="column">
             <p class="title">
