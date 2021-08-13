@@ -2,6 +2,10 @@
   all: revert
 }
 
+.hero-logo {
+  max-width: 128px;
+}
+
 // Hide the LiveView reload iframe
 .directory iframe {
   display: none;
