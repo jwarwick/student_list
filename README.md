@@ -62,6 +62,15 @@ To see system logs:
 
 When the server is started, if no users are present in the database, the `Registration` page will be available at `/users/register`. This account will be an admin account and can finish the server setup.
 
+## Testing
+Several tools are part of the `dev` build which validate the code:
+```
+% mix test
+% mix credo
+% mix sobelow
+% mix dialyzer
+```
+
 ## Issues
 Ran into a few problems during initial project creation:
   - There is a bug with `node_sass`, needed to install `phoenix` from the main repo: <https://github.com/phoenixframework/phoenix/tree/master/installer>.
