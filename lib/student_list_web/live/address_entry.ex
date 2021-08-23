@@ -5,7 +5,7 @@ defmodule StudentListWeb.Live.AddressEntry do
   use Surface.LiveComponent
 
   alias Surface.Components.Form
-  alias Surface.Components.Form.{Field, Label, TextInput}
+  alias Surface.Components.Form.{Field, TextInput}
 
   alias StudentListWeb.Live.AdultEntry
 
@@ -42,42 +42,42 @@ defmodule StudentListWeb.Live.AddressEntry do
 
       <Form for={:address} change="update_address" >
         <Field class="field" name="address1">
-          <Label class="label">Address 1</Label>
+          <label class="label" for={"#{assigns.id}-address-1"}>Address 1</label>
           <div class="control">
             <TextInput class="input" value={Map.get(@address, "address1", "")} id={"#{assigns.id}-address-1"} />
           </div>
         </Field>
 
         <Field class="field" name="address2">
-          <Label class="label">Address 2</Label>
+          <label class="label" for={"#{assigns.id}-address-2"}>Address 2</label>
           <div class="control">
             <TextInput class="input" value={Map.get(@address, "address2", "")} id={"#{assigns.id}-address-2"} />
           </div>
         </Field>
 
         <Field class="field" name="city">
-          <Label class="label">City</Label>
+          <label class="label" for={"#{assigns.id}-city"}>City</label>
           <div class="control">
             <TextInput class="input" value={Map.get(@address, "city", "")} id={"#{assigns.id}-city"} />
           </div>
         </Field>
 
         <Field class="field" name="state">
-          <Label class="label">State</Label>
+          <label class="label" for={"#{assigns.id}-state"}>State</label>
           <div class="control">
             <TextInput class="input" value={Map.get(@address, "state", "")} id={"#{assigns.id}-state"} />
           </div>
         </Field>
 
         <Field class="field" name="zip">
-          <Label class="label">Zip</Label>
+          <label class="label" for={"#{assigns.id}-zip"}>Zip</label>
           <div class="control">
             <TextInput class="input" value={Map.get(@address, "zip", "")} id={"#{assigns.id}-zip"} />
           </div>
         </Field>
 
         <Field class="field" name="phone">
-          <Label class="label">Home Phone</Label>
+          <label class="label" for={"#{assigns.id}-phone"}>Home Phone</label>
           <div class="control">
             <TextInput class="input" value={Map.get(@address, "phone", "")} id={"#{assigns.id}-phone"} />
           </div>

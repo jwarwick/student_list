@@ -5,7 +5,7 @@ defmodule StudentListWeb.Live.StudentEntry do
   use Surface.LiveComponent
 
   alias Surface.Components.Form
-  alias Surface.Components.Form.{Field, Label, TextInput, Select}
+  alias Surface.Components.Form.{Field, TextInput, Select}
 
   prop can_delete, :boolean, default: true
   prop index, :integer
@@ -29,28 +29,28 @@ defmodule StudentListWeb.Live.StudentEntry do
         <div class="card-content">
           <Form for={:student} change="update_student" >
             <Field class="field" name="first_name">
-              <Label class="label">First Name</Label>
+              <label class="label" for={"#{assigns.id}-first-name"}>First Name</label>
               <div class="control">
                 <TextInput class="input" value={Map.get(@student, "first_name", "")} id={"#{assigns.id}-first-name"} />
               </div>
             </Field>
 
             <Field class="field" name="last_name">
-              <Label class="label">Last Name</Label>
+              <label class="label" for={"#{assigns.id}-last-name"}>Last Name</label>
               <div class="control">
                 <TextInput class="input" value={Map.get(@student, "last_name", "")} id={"#{assigns.id}-last-name"} />
               </div>
             </Field>
 
             <Field class="field" name={:classroom}>
-              <Label class="label">Classroom</Label>
+              <label class="label" for={"#{assigns.id}-classroom"}>Classroom</label>
               <div class="select">
                 <Select class="input" options={@sorted_classrooms} id={"#{assigns.id}-classroom"} selected={Map.get(@student, "classroom", first_value(@sorted_classrooms))}/>
               </div>
             </Field>
 
             <Field class="field" name={:bus}>
-              <Label class="label">Bus</Label>
+              <label class="label" for={"#{assigns.id}-bus"}>Bus</label>
               <div class="select">
                 <Select class="input" options={@sorted_buses} id={"#{assigns.id}-bus"} selected={Map.get(@student, "bus", first_value(@sorted_buses))}/>
               </div>

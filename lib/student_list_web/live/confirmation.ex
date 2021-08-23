@@ -10,7 +10,7 @@ defmodule StudentListWeb.Live.Confirmation do
 
   def render(assigns) do
     ~F"""
-    <section class="hero is-primary">
+    <heading class="hero is-primary">
       <div class="hero-body">
         <div class="columns is-vcentered">
           <figure class="column is-narrow image">
@@ -29,9 +29,9 @@ defmodule StudentListWeb.Live.Confirmation do
           </div>
         </div>
       </div>
-    </section>
+    </heading>
 
-    <section>
+    <main>
     <div class="directory">
       <div class="students">
         {#for student <- @students}
@@ -90,7 +90,7 @@ defmodule StudentListWeb.Live.Confirmation do
         {/for}
       </div>
     </div>
-    </section>
+    </main>
     """
   end
 end

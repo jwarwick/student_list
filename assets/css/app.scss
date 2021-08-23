@@ -107,11 +107,15 @@ $info: #31708E;
 $body-background-color: #F7F9FB;
 $card-footer-background-color: #EDEAE5;
 
-$student-card-header-background-color: #5085A5;
+$student-card-header-background-color: #4593b9;
 $adult-card-header-background-color: #8FC1E3;
 $address-card-header-background-color: $student-card-header-background-color;
 
 @import "../node_modules/bulma/bulma.sass";
+
+.card-header-title {
+  color: black;
+}
 
 .student-card-header {
   background-color: $student-card-header-background-color;

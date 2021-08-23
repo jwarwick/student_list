@@ -5,7 +5,7 @@ defmodule StudentListWeb.PageLive do
   use Surface.LiveView
 
   alias Surface.Components.Form
-  alias Surface.Components.Form.{Field, Label, TextArea}
+  alias Surface.Components.Form.{Field, TextArea}
 
   alias Ecto.Multi
 
@@ -49,47 +49,48 @@ defmodule StudentListWeb.PageLive do
       <Heading
         support_email={Directory.support_email()}
       />
+      <main>
+        <div class="mb-6 mt-4">
+          <div class="container">
+            <StudentEntry
+              :for.with_index={{s, index} <- @students}
+                id={"student-#{index}"}
+                student={s}
+                index={index}
+                sorted_buses={@sorted_buses}
+                sorted_classrooms={@sorted_classrooms}
+                can_delete={length(@students) > 1} />
+            <button type="button" class="button is-info" :on-click="add_student">Add Another Student</button>
+          </div>
+        </div>
 
-      <div class="mb-6 mt-4">
+        <div class="mb-6">
+          <div class="container">
+            <AddressEntry
+              :for.with_index={{a, index} <- @addresses}
+                id={"address-#{index}"}
+                address={a}
+                index={index}
+                can_delete={length(@addresses) > 1} />
+            <button type="button" class="button is-info" :on-click="add_address">Add Another Household</button>
+          </div>
+        </div>
+
+          <div class="container mb-4">
+            <Form for={:notes} change="update_notes" >
+              <Field class="field" name="note">
+                <label class="label" for="notes-input">Notes</label>
+                <div class="control">
+                  <TextArea class="input" rows={"4"} value={@notes} id={"notes-input"} opts={placeholder: "Tell us if you are on the PTO, a classroom representative, on the School Committee, on the School Council, or on the Safety Committee."} />
+                </div>
+              </Field>
+            </Form>
+          </div>
+
         <div class="container">
-          <StudentEntry
-            :for.with_index={{s, index} <- @students}
-              id={"student-#{index}"}
-              student={s}
-              index={index}
-              sorted_buses={@sorted_buses}
-              sorted_classrooms={@sorted_classrooms}
-              can_delete={length(@students) > 1} />
-          <button type="button" class="button is-info" :on-click="add_student">Add Another Student</button>
+          <button type="button" class="button is-primary is-large" :on-click="submit_form" disabled={!valid_data?(assigns)} >Submit</button>
         </div>
-      </div>
-
-      <div class="mb-6">
-        <div class="container">
-          <AddressEntry
-            :for.with_index={{a, index} <- @addresses}
-              id={"address-#{index}"}
-              address={a}
-              index={index}
-              can_delete={length(@addresses) > 1} />
-          <button type="button" class="button is-info" :on-click="add_address">Add Another Household</button>
-        </div>
-      </div>
-
-        <div class="container mb-4">
-          <Form for={:notes} change="update_notes" >
-            <Field class="field" name="note">
-              <Label class="label">Notes</Label>
-              <div class="control">
-                <TextArea class="input" rows={"4"} value={@notes} id={"notes-input"} opts={placeholder: "Tell us if you are on the PTO, a classroom representative, on the School Committee, on the School Council, or on the Safety Committee."} />
-              </div>
-            </Field>
-          </Form>
-        </div>
-
-      <div class="container">
-        <button type="button" class="button is-primary is-large" :on-click="submit_form" disabled={!valid_data?(assigns)} >Submit</button>
-      </div>
+      </main>
     </div>
     """
   end

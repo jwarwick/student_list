@@ -8,16 +8,16 @@ defmodule StudentListWeb.Live.Heading do
 
   def render(assigns) do
     ~F"""
-    <section class="hero is-primary">
+    <header class="hero is-primary">
       <div class="hero-body">
         <div class="columns is-vcentered">
           <figure class="column is-narrow image">
-            <img class="hero-logo" src="/images/logo.png" alt="Logo">
+            <img class="hero-logo" src="/images/logo.png" alt="SES Directory Logo">
           </figure>
           <div class="column">
-            <p class="title">
+            <h1 class="title">
               Add your information!
-            </p>
+            </h1>
             <p class="subtitle">
               Enter your information to be included in the student directory. All fields are optional.
             </p>
@@ -27,7 +27,7 @@ defmodule StudentListWeb.Live.Heading do
           </div>
         </div>
       </div>
-    </section>
+    </header>
     """
   end
 end

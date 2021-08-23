@@ -5,7 +5,7 @@ defmodule StudentListWeb.Live.AdultEntry do
   use Surface.LiveComponent
 
   alias Surface.Components.Form
-  alias Surface.Components.Form.{Field, Label, TextInput}
+  alias Surface.Components.Form.{Field, TextInput}
 
   prop can_delete, :boolean, default: true
   prop index, :integer
@@ -26,28 +26,28 @@ defmodule StudentListWeb.Live.AdultEntry do
           <Form for={:adult} change="update_adult" >
 
             <Field class="field" name="first_name">
-              <Label class="label">First Name</Label>
+              <label class="label" for={"#{assigns.id}-first-name"}>First Name</label>
               <div class="control">
                 <TextInput class="input" value={Map.get(@adult, "first_name", "")} id={"#{assigns.id}-first-name"} />
               </div>
             </Field>
 
             <Field class="field" name="last_name">
-              <Label class="label">Last Name</Label>
+              <label class="label" for={"#{assigns.id}-last-name"}>Last Name</label>
               <div class="control">
                 <TextInput class="input" value={Map.get(@adult, "last_name", "")} id={"#{assigns.id}-last-name"} />
               </div>
             </Field>
 
             <Field class="field" name="email">
-              <Label class="label">Email</Label>
+              <label class="label" for={"#{assigns.id}-email"}>Email</label>
               <div class="control">
                 <TextInput class="input" value={Map.get(@adult, "email", "")} id={"#{assigns.id}-email"} />
               </div>
             </Field>
 
             <Field class="field" name="mobile_phone">
-              <Label class="label">Mobile Phone</Label>
+              <label class="label" for={"#{assigns.id}-mobile-phone"}>Mobile Phone</label>
               <div class="control">
                 <TextInput class="input" value={Map.get(@adult, "mobile_phone", "")} id={"#{assigns.id}-mobile-phone"} />
               </div>
