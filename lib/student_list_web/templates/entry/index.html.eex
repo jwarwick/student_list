@@ -5,15 +5,15 @@
 <section id="torch-index-content">
   <div class="torch-container">
     <section id="torch-filters">
-      <h3>Find Entries</h3>
+      <h3>Find Entries <%= if length(@entries) > 0 do %> (<%= length(@entries) %>)<% end %></h3>
       <%= form_tag @conn.request_path, method: :get, id: "torch-filters-form" do %>
-        
+
           <div class="field">
             <label>Content</label>
             <%= filter_select(:entry, :content, @conn.params) %>
             <%= filter_string_input(:entry, :content, @conn.params) %>
           </div>
-        
+
         <button type="submit" class="torch-button">Search</button>
         <%= link "Clear Filters", to: Routes.entry_path(@conn, :index) %>
       <% end %>
@@ -25,18 +25,18 @@
       <table>
         <thead>
           <tr>
-            
+
               <th><%= table_link(@conn, "Content", :content) %></th>
-            
+
             <th><span>Actions</span></th>
           </tr>
         </thead>
         <tbody>
           <%= for entry <- @entries do %>
             <tr>
-              
+
                 <td><%= entry.content %></td>
-              
+
               <td class="torch-actions">
                 <span><%= link "Show", to: Routes.entry_path(@conn, :show, entry) %></span>
                 <span><%= link "Delete", to: Routes.entry_path(@conn, :delete, entry), method: :delete, data: [confirm: "Are you sure?"] %></span>

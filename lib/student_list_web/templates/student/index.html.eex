@@ -6,27 +6,27 @@
 <section id="torch-index-content">
   <div class="torch-container">
     <section id="torch-filters">
-      <h3>Find Students</h3>
+      <h3>Find Students <%= if length(@students) > 0 do %> (<%= length(@students) %>)<% end %></h3>
       <%= form_tag @conn.request_path, method: :get, id: "torch-filters-form" do %>
-        
+
           <div class="field">
             <label>First name</label>
             <%= filter_select(:student, :first_name, @conn.params) %>
             <%= filter_string_input(:student, :first_name, @conn.params) %>
           </div>
-        
+
           <div class="field">
             <label>Last name</label>
             <%= filter_select(:student, :last_name, @conn.params) %>
             <%= filter_string_input(:student, :last_name, @conn.params) %>
           </div>
-        
+
           <div class="field">
             <label>Notes</label>
             <%= filter_select(:student, :notes, @conn.params) %>
             <%= filter_string_input(:student, :notes, @conn.params) %>
           </div>
-        
+
         <button type="submit" class="torch-button">Search</button>
         <%= link "Clear Filters", to: Routes.student_path(@conn, :index) %>
       <% end %>
@@ -38,30 +38,30 @@
       <table>
         <thead>
           <tr>
-            
+
               <th><%= table_link(@conn, "First name", :first_name) %></th>
-            
+
               <th><%= table_link(@conn, "Last name", :last_name) %></th>
 
               <th><%= table_link(@conn, "Classroom", :class_id) %></th>
 
               <th><%= table_link(@conn, "Bus", :bus_id) %></th>
-            
+
             <th><span>Actions</span></th>
           </tr>
         </thead>
         <tbody>
           <%= for student <- @students do %>
             <tr>
-              
+
                 <td><%= student.first_name %></td>
-              
+
                 <td><%= student.last_name %></td>
 
                 <td><%= if student.class, do: student.class.name, else: "Not Set" %></td>
 
                 <td><%= if student.bus, do: student.bus.name, else: "Not Set" %></td>
-              
+
               <td class="torch-actions">
                 <span><%= link "Show", to: Routes.student_path(@conn, :show, student) %></span>
                 <span><%= link "Edit", to: Routes.student_path(@conn, :edit, student) %></span>

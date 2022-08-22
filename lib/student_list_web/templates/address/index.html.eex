@@ -6,48 +6,48 @@
 <section id="torch-index-content">
   <div class="torch-container">
     <section id="torch-filters">
-      <h3>Find Addresses</h3>
+      <h3>Find Addresses <%= if length(@addresses) > 0 do %> (<%= length(@addresses) %>)<% end %></h3>
       <%= form_tag @conn.request_path, method: :get, id: "torch-filters-form" do %>
-        
+
           <div class="field">
             <label>Address1</label>
             <%= filter_select(:address, :address1, @conn.params) %>
             <%= filter_string_input(:address, :address1, @conn.params) %>
           </div>
-        
+
           <div class="field">
             <label>Address2</label>
             <%= filter_select(:address, :address2, @conn.params) %>
             <%= filter_string_input(:address, :address2, @conn.params) %>
           </div>
-        
+
           <div class="field">
             <label>City</label>
             <%= filter_select(:address, :city, @conn.params) %>
             <%= filter_string_input(:address, :city, @conn.params) %>
           </div>
-        
+
           <div class="field">
             <label>State</label>
             <%= filter_select(:address, :state, @conn.params) %>
             <%= filter_string_input(:address, :state, @conn.params) %>
           </div>
-        
+
           <div class="field">
             <label>Zip</label>
             <%= filter_select(:address, :zip, @conn.params) %>
             <%= filter_string_input(:address, :zip, @conn.params) %>
           </div>
-        
+
           <div class="field">
             <label>Phone</label>
             <%= filter_select(:address, :phone, @conn.params) %>
             <%= filter_string_input(:address, :phone, @conn.params) %>
           </div>
-        
-        
-        
-        
+
+
+
+
         <button type="submit" class="torch-button">Search</button>
         <%= link "Clear Filters", to: Routes.address_path(@conn, :index) %>
       <% end %>
@@ -59,38 +59,38 @@
       <table>
         <thead>
           <tr>
-            
+
               <th><%= table_link(@conn, "Address1", :address1) %></th>
-            
+
               <th><%= table_link(@conn, "Address2", :address2) %></th>
-            
+
               <th><%= table_link(@conn, "City", :city) %></th>
-            
+
               <th><%= table_link(@conn, "State", :state) %></th>
-            
+
               <th><%= table_link(@conn, "Zip", :zip) %></th>
-            
+
               <th><%= table_link(@conn, "Phone", :phone) %></th>
-            
+
             <th><span>Actions</span></th>
           </tr>
         </thead>
         <tbody>
           <%= for address <- @addresses do %>
             <tr>
-              
+
                 <td><%= address.address1 %></td>
-              
+
                 <td><%= address.address2 %></td>
-              
+
                 <td><%= address.city %></td>
-              
+
                 <td><%= address.state %></td>
-              
+
                 <td><%= address.zip %></td>
-              
+
                 <td><%= address.phone %></td>
-              
+
               <td class="torch-actions">
                 <span><%= link "Show", to: Routes.address_path(@conn, :show, address) %></span>
                 <span><%= link "Edit", to: Routes.address_path(@conn, :edit, address) %></span>

@@ -6,30 +6,30 @@
 <section id="torch-index-content">
   <div class="torch-container">
     <section id="torch-filters">
-      <h3>Find Classes</h3>
+      <h3>Find Classes <%= if length(@classes) > 0 do %> (<%= length(@classes) %>)<% end %></h3>
       <%= form_tag @conn.request_path, method: :get, id: "torch-filters-form" do %>
-        
+
           <div class="field">
             <label>Name</label>
             <%= filter_select(:class, :name, @conn.params) %>
             <%= filter_string_input(:class, :name, @conn.params) %>
           </div>
-        
+
           <div class="field">
             <label>Teacher</label>
             <%= filter_select(:class, :teacher, @conn.params) %>
             <%= filter_string_input(:class, :teacher, @conn.params) %>
           </div>
-        
-        
-        
-        
+
+
+
+
           <div class="field">
             <label>Display order</label>
             <%= number_filter_select(:class, :display_order, @conn.params) %>
             <%= filter_number_input(:class, :display_order, @conn.params) %>
           </div>
-        
+
         <button type="submit" class="torch-button">Search</button>
         <%= link "Clear Filters", to: Routes.class_path(@conn, :index) %>
       <% end %>
@@ -41,26 +41,26 @@
       <table>
         <thead>
           <tr>
-            
+
               <th><%= table_link(@conn, "Name", :name) %></th>
-            
+
               <th><%= table_link(@conn, "Teacher", :teacher) %></th>
-            
+
               <th><%= table_link(@conn, "Display order", :display_order) %></th>
-            
+
             <th><span>Actions</span></th>
           </tr>
         </thead>
         <tbody>
           <%= for class <- @classes do %>
             <tr>
-              
+
                 <td><%= class.name %></td>
-              
+
                 <td><%= class.teacher %></td>
-              
+
                 <td><%= class.display_order %></td>
-              
+
               <td class="torch-actions">
                 <span><%= link "Show", to: Routes.class_path(@conn, :show, class) %></span>
                 <span><%= link "Edit", to: Routes.class_path(@conn, :edit, class) %></span>

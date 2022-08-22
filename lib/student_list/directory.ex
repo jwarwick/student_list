@@ -932,7 +932,25 @@ defmodule StudentList.Directory do
   Return the complete directory listing
   """
   def get_listing do
-    list_classes() |> Repo.preload([students: [:bus, addresses: :adults]])
+    #list_classes() |> Repo.preload([students: [:bus, addresses: :adults]])
+
+    #Repo.all(from c in Class, order_by: c.display_order)
+
+    query =
+      from(
+        c in Class,
+        select: c,
+        order_by: c.display_order,
+        preload: [
+          students:
+            ^from(
+              s in Student,
+              order_by: [asc: s.last_name, asc: s.first_name],
+              preload: [:bus, addresses: :adults]
+            )
+        ]
+      )
+    Repo.all(query)
   end
 
   @doc """

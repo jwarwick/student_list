@@ -6,23 +6,23 @@
 <section id="torch-index-content">
   <div class="torch-container">
     <section id="torch-filters">
-      <h3>Find Members</h3>
+      <h3>Find Members <%= if length(@members) > 0 do %> (<%= length(@members) %>)<% end %></h3>
       <%= form_tag @conn.request_path, method: :get, id: "torch-filters-form" do %>
-        
+
           <div class="field">
             <label>Email</label>
             <%= filter_select(:member, :email, @conn.params) %>
             <%= filter_string_input(:member, :email, @conn.params) %>
           </div>
-        
-        
-        
+
+
+
           <div class="field">
             <label>Confirmed at</label>
             <%= filter_date_input(:member, :confirmed_at, @conn.params) %>
           </div>
-        
-        
+
+
         <button type="submit" class="torch-button">Search</button>
         <%= link "Clear Filters", to: Routes.member_path(@conn, :index) %>
       <% end %>
@@ -34,22 +34,22 @@
       <table>
         <thead>
           <tr>
-            
+
               <th><%= table_link(@conn, "Email", :email) %></th>
-            
+
               <th><%= table_link(@conn, "Confirmed at", :confirmed_at) %></th>
-            
+
             <th><span>Actions</span></th>
           </tr>
         </thead>
         <tbody>
           <%= for member <- @members do %>
             <tr>
-              
+
                 <td><%= member.email %></td>
-              
+
                 <td><%= member.confirmed_at %></td>
-              
+
               <td class="torch-actions">
                 <span><%= link "Show", to: Routes.member_path(@conn, :show, member) %></span>
                 <span><%= link "Delete", to: Routes.member_path(@conn, :delete, member), method: :delete, data: [confirm: "Are you sure?"] %></span>
