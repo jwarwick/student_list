@@ -28,6 +28,9 @@ To deploy there, follow these steps:
 % gigalixir run mix ecto.create
 % gigalixir run mix ecto.migrate
 # Gigalixir provides the DATABASE_URL and SECRET_KEY_BASE environment variables by default
+
+% gigalixir domains:add my-directory.org
+% gigalixir domains:add www.my-directory.org
 ```
 
 To see the status of your app:
@@ -61,6 +64,8 @@ To see system logs:
 ## Site Account Creation
 
 When the server is started, if no users are present in the database, the `Registration` page will be available at `/users/register`. This account will be an admin account and can finish the server setup.
+
+At setup time, under `Site Configuration`, create a `support_email` key to be displayed in the main page header. Set a value that is forwarded by your email service provider.
 
 ## Testing
 Several tools are part of the `dev` build which validate the code:
